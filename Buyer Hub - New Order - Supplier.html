@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Procure — New Order</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+<style>
+  :root {
+    --seaweed: #0E3727;
+    --nomni-green: #2AC864;
+    --mint: #E2FFE6;
+    --cream: #FAF7E9;
+    --bg: #f4f4f6;
+    --panel: #ffffff;
+    --ink: #1a1f2b;
+    --ink-2: #3b4150;
+    --ink-mute: #8a8f98;
+    --ink-soft: #c7c9cf;
+    --rule: #e7e8ec;
+    --primary: #2AC864;
+    --primary-ink: #0E3727;
+    --row-hover: #f7f8fa;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body {
+    font-family: "Inter", system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
+    color: var(--ink); font-size: 15px; line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- App shell (no sidebar) ---------- */
+  .app { display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ---------- Topbar ---------- */
+  .topbar {
+    background: #1f2226; color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 22px 0 11px;
+    height: 56px;
+    border-bottom: 1px solid #000;
+    position: sticky; top: 0; z-index: 5;
+    flex: 0 0 56px;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .topbar-right { display: flex; align-items: center; gap: 4px; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .help-btn {
+    background: transparent; border: none;
+    color: rgba(255,255,255,.7); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 10px; border-radius: 6px;
+    transition: background .15s, color .15s;
+    text-decoration: none; font-size: 14px;
+  }
+  .help-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+  .help-btn .material-symbols-outlined { font-size: 18px; line-height: 1; }
+
+  .app-switcher { position: relative; }
+  .app-switcher-btn {
+    background: transparent; border: 0; color: #fff;
+    width: 40px; height: 40px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background-color .15s ease;
+  }
+  .app-switcher-btn:hover { background: rgba(255,255,255,.08); }
+  .app-switcher-btn.open { background: rgba(255,255,255,.12); }
+  .app-switcher-btn svg { width: 20px; height: 20px; }
+  .app-switcher-panel {
+    position: absolute; top: calc(100% + 8px); left: 0; width: 360px;
+    background: #fff; color: var(--ink);
+    border-radius: 10px; box-shadow: 0 14px 40px rgba(10,20,15,.22), 0 2px 8px rgba(10,20,15,.08);
+    padding: 18px 18px 14px; display: none; z-index: 40;
+    animation: switcherIn .14s ease-out;
+  }
+  .app-switcher-panel.open { display: block; }
+  @keyframes switcherIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .app-item {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 12px 6px; border-radius: 8px; text-decoration: none; color: var(--ink);
+    cursor: pointer; transition: background-color .12s ease; gap: 8px;
+  }
+  .app-item:hover { background: #f3f4f6; }
+  .app-tile {
+    width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 21px; letter-spacing: -0.02em;
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+  }
+  .app-item.current .app-tile { outline: 2px solid var(--seaweed); outline-offset: 2px; }
+  .app-label { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .app-switcher-foot {
+    border-top: 1px solid var(--rule); margin-top: 12px; padding-top: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--ink-mute);
+  }
+  .app-switcher-foot a { color: var(--primary-ink); text-decoration: none; font-weight: 600; }
+  .app-switcher-foot a:hover { color: #1A8040; }
+
+  .brand { display: flex; align-items: center; gap: 8px; padding: 0; }
+  .brand-logo-img { height: 26px; width: auto; display: block; }
+  .brand-sub {
+    color: var(--nomni-green); font-weight: 400; font-size: 23px; padding-left: 0;
+    font-family: "Hanken Grotesk", system-ui, sans-serif; letter-spacing: 0; line-height: 1;
+  }
+  .user { display: flex; align-items: center; gap: 10px; font-weight: 400; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%; background: #7F6AD0; color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+  }
+  .chev {
+    width: 10px; height: 10px; display: inline-block;
+    border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translate(-1px,-1px);
+  }
+  .user .chev { color: #c9ccd1; }
+
+  /* ---------- Order header bar ---------- */
+  .order-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 32px 18px;
+    border-bottom: 1px solid var(--rule);
+    background: #fff;
+  }
+  .order-header-left { display: flex; align-items: flex-start; gap: 14px; }
+  .back-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 8px;
+    background: transparent; border: 1px solid var(--rule);
+    color: var(--ink-2); cursor: pointer; text-decoration: none;
+    transition: background .12s, border-color .12s; flex: 0 0 34px; margin-top: 4px;
+  }
+  .back-btn:hover { background: #f3f4f6; border-color: #c0c2c8; }
+  .back-btn svg { width: 16px; height: 16px; }
+  .order-header-title { font-size: 21px; font-weight: 700; color: var(--ink); margin: 0 0 4px; letter-spacing: -.01em; }
+  .order-header-sub { font-size: 14px; color: var(--ink-mute); margin: 0; }
+  .order-header-right { display: flex; align-items: center; gap: 14px; flex: 0 0 auto; }
+  .subtotal-label { font-size: 15px; color: var(--ink-2); white-space: nowrap; }
+  .subtotal-label span { font-weight: 700; color: var(--ink); }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    border-radius: 6px; padding: 9px 16px; border: 1px solid transparent;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    line-height: 1; white-space: nowrap;
+    transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .btn-primary { background: var(--nomni-green); color: var(--seaweed); border-color: var(--nomni-green); }
+  .btn-primary:hover { background: var(--seaweed); color: var(--nomni-green); border-color: var(--seaweed); }
+  .btn-secondary {
+    background: var(--mint);
+    color: var(--seaweed);
+    border-color: var(--mint);
+  }
+  .btn-secondary:hover { background: #c6f2ce; color: var(--seaweed); border-color: #c6f2ce; }
+  .btn-tertiary {
+    background: #f3f4f6; color: var(--ink-2); border-color: transparent;
+    font-size: 14px; padding: 7px 12px;
+  }
+  .btn-tertiary:hover { background: #e6e8ec; color: var(--ink); border-color: transparent; }
+  .btn-tertiary svg { width: 14px; height: 14px; color: var(--ink-mute); flex: 0 0 14px; }
+
+  /* ---------- Order body ---------- */
+  .order-body { flex: 1; padding: 0; }
+  .order-filters {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 32px;
+    border-bottom: 1px solid var(--rule);
+    background: #fff;
+  }
+  .entry-count { font-size: 14px; color: var(--ink-mute); margin-left: auto; }
+  .entry-count b { color: var(--ink-2); }
+  .input {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #fff; border: 1px solid #dcdee3; border-radius: 6px;
+    padding: 7px 12px; font-size: 15px; color: var(--ink-2); min-height: 34px;
+  }
+  .input svg { color: var(--ink-mute); flex: 0 0 auto; }
+  .input input {
+    border: 0; outline: 0; background: transparent; font: inherit; color: var(--ink); width: 140px;
+  }
+  .input input::placeholder { color: var(--ink-mute); }
+
+  /* ---------- Product table ---------- */
+  .table-wrap { overflow-x: auto; }
+  table.products {
+    width: 100%; border-collapse: separate; border-spacing: 0; font-size: 15px;
+  }
+  .products thead th {
+    text-align: left; font-weight: 600; color: var(--ink-2);
+    padding: 12px 16px; border-bottom: 1px solid var(--rule);
+    background: #f9fafb; font-size: 12px; white-space: nowrap;
+  }
+  .products tbody td {
+    padding: 14px 16px; border-bottom: 1px solid var(--rule);
+    vertical-align: middle; color: var(--ink);
+  }
+  .products tbody tr:hover td { background: var(--row-hover); }
+  .col-name { min-width: 220px; }
+  .col-uom, .col-price, .col-onhand, .col-par { width: 90px; }
+  .col-qty { width: 200px; }
+  .col-amount { width: 130px; text-align: right; }
+  .products thead th.col-amount { text-align: right; }
+  .fill-par-link { color: #1A8040; text-decoration: none; font-weight: 600; }
+  .fill-par-link:hover { text-decoration: underline; }
+  .prod-name-cell { display: flex; align-items: center; gap: 8px; }
+  .info-icon {
+    color: var(--ink-mute); cursor: pointer; flex: 0 0 auto;
+    display: inline-flex; align-items: center;
+  }
+  .info-icon:hover { color: var(--ink-2); }
+  .muted-val { color: var(--ink-mute); }
+  .unavailable { color: var(--ink-mute); display: flex; align-items: center; gap: 6px; }
+  .add-to-order-link {
+    color: #1A8040; font-weight: 600; text-decoration: none;
+  }
+  .add-to-order-link:hover { text-decoration: underline; }
+
+  /* Qty stepper */
+  .qty-stepper { display: inline-flex; align-items: center; border: 1px solid #d0d2d8; border-radius: 6px; overflow: hidden; }
+  .qty-stepper button {
+    width: 32px; height: 32px; background: #f3f4f6; border: none; cursor: pointer;
+    font-size: 17px; line-height: 1; color: var(--ink-2);
+    display: flex; align-items: center; justify-content: center;
+    transition: background .12s; font-family: inherit;
+  }
+  .qty-stepper button:hover { background: #e6e8ec; color: var(--ink); }
+  .qty-stepper input {
+    width: 44px; height: 32px; border: none;
+    border-left: 1px solid #d0d2d8; border-right: 1px solid #d0d2d8;
+    text-align: center; font: inherit; font-size: 15px; font-weight: 600;
+    color: var(--ink); outline: none; -moz-appearance: textfield;
+  }
+  .qty-stepper input::-webkit-inner-spin-button, .qty-stepper input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  /* Amount with check */
+  .amount-cell { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+  .amount-val { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .amount-check {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--nomni-green);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: 0 0 20px;
+  }
+  .amount-check svg { width: 11px; height: 11px; }
+
+  /* ---------- Review modal ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.45);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+  }
+  .modal-overlay.hidden { display: none; }
+  body.modal-open { overflow: hidden; }
+
+  .modal-dialog {
+    background: #fff; border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    width: 760px; max-width: calc(100vw - 32px);
+    display: flex; flex-direction: column;
+    max-height: calc(100vh - 48px); overflow: hidden;
+  }
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px 16px; border-bottom: 1px solid var(--rule);
+    flex: 0 0 auto;
+  }
+  .modal-title { font-size: 18px; font-weight: 700; color: var(--ink); margin: 0; }
+  .modal-close {
+    width: 32px; height: 32px; border-radius: 6px;
+    background: transparent; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ink-mute); transition: background .12s, color .12s; flex: 0 0 32px;
+  }
+  .modal-close:hover { background: #f3f4f6; color: var(--ink); }
+  .modal-close svg { width: 16px; height: 16px; }
+
+  .modal-body { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+  .modal-left {
+    flex: 1; padding: 20px 24px; overflow-y: auto;
+    border-right: 1px solid var(--rule);
+  }
+  .modal-right { width: 230px; flex: 0 0 230px; padding: 20px 20px; overflow-y: auto; }
+
+  /* Left panel */
+  .modal-items-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .modal-items-count { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .modal-fill-par { color: #1A8040; font-weight: 600; text-decoration: none; font-size: 14px; }
+  .modal-fill-par:hover { text-decoration: underline; }
+
+  .modal-item-row {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 6px;
+  }
+  .modal-item-name { flex: 1; font-size: 14px; color: var(--ink); }
+  .modal-item-amount { font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; min-width: 64px; text-align: right; }
+
+  .modal-item-meta {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+  }
+  .modal-item-price-unit { font-size: 12px; color: var(--ink-mute); }
+  .modal-item-add-notes {
+    font-size: 12px; color: var(--ink-2); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .modal-item-add-notes:hover { text-decoration: underline; }
+  .modal-item-delete { font-size: 12px; color: var(--ink-mute); text-decoration: none; cursor: pointer; }
+  .modal-item-delete:hover { color: #c0392b; }
+
+  .modal-add-more {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 14px; font-weight: 600; color: var(--ink-2);
+    text-decoration: none; background: #f3f4f6;
+    border: 1px solid #dcdee3; border-radius: 6px;
+    padding: 7px 14px; margin-bottom: 20px;
+    transition: background .12s;
+  }
+  .modal-add-more:hover { background: #e9eaed; }
+  .modal-section-rule { border: none; border-top: 1px solid var(--rule); margin: 0 0 18px; }
+  .modal-section-title { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 12px; }
+  .modal-field { margin-bottom: 14px; }
+  .modal-field label { display: block; font-size: 13px; color: var(--ink-2); margin-bottom: 5px; }
+  .modal-select {
+    width: 100%; padding: 8px 32px 8px 10px;
+    border: 1px solid #dcdee3; border-radius: 6px;
+    font: inherit; font-size: 14px; color: var(--ink); background: #fff;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8f98' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+  }
+  .modal-select:focus { outline: 2px solid var(--nomni-green); outline-offset: 1px; }
+  .modal-textarea {
+    width: 100%; min-height: 90px; padding: 9px 10px;
+    border: 1px solid #dcdee3; border-radius: 6px;
+    font: inherit; font-size: 14px; color: var(--ink);
+    resize: vertical; line-height: 1.5;
+  }
+  .modal-textarea:focus { outline: 2px solid var(--nomni-green); outline-offset: 1px; }
+  .modal-char-counter { font-size: 12px; color: var(--ink-mute); margin-top: 4px; }
+
+  /* Right panel — order summary */
+  .modal-summary-title { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 14px; }
+  .modal-summary-outlet,
+  .modal-summary-date {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 14px; color: var(--ink-2); margin-bottom: 8px;
+  }
+  .modal-summary-outlet .material-symbols-outlined,
+  .modal-summary-date .material-symbols-outlined { font-size: 16px; color: var(--ink-mute); }
+  .modal-summary-date-link {
+    color: #1A8040; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 3px;
+  }
+  .modal-summary-date-link:hover { text-decoration: underline; }
+  .modal-summary-divider { border: none; border-top: 1px solid var(--rule); margin: 14px 0; }
+  .modal-summary-row {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 14px; color: var(--ink-2); margin-bottom: 8px;
+  }
+  .modal-summary-row .val { font-variant-numeric: tabular-nums; color: var(--ink); }
+  .modal-promo-link {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 13px; color: #1A8040; text-decoration: none; margin-bottom: 10px;
+  }
+  .modal-promo-link:hover { text-decoration: underline; }
+  .modal-promo-link .material-symbols-outlined { font-size: 15px; }
+  .modal-summary-total-row {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 8px;
+  }
+  .modal-summary-total-row .val { font-variant-numeric: tabular-nums; }
+  .modal-summary-disclaimer { font-size: 11px; color: var(--ink-mute); line-height: 1.4; margin-top: 8px; }
+
+  /* Modal footer */
+  .modal-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px; border-top: 1px solid var(--rule);
+    flex: 0 0 auto; gap: 16px;
+  }
+  .modal-footer-left { display: flex; align-items: center; gap: 16px; }
+  .modal-footer-right { display: flex; align-items: center; gap: 14px; }
+  .modal-delete-link { font-size: 14px; color: #c0392b; text-decoration: none; font-weight: 500; }
+  .modal-delete-link:hover { text-decoration: underline; }
+  .modal-save-draft { font-size: 14px; color: #1A8040; text-decoration: none; font-weight: 500; }
+  .modal-save-draft:hover { text-decoration: underline; }
+  .modal-footer-total { font-size: 14px; color: var(--ink-2); white-space: nowrap; }
+  .modal-footer-total strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== TOPBAR ===== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="app-switcher">
+        <button class="app-switcher-btn" id="appSwitcherBtn" aria-label="Switch app" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <circle cx="5" cy="5" r="1.8"/><circle cx="12" cy="5" r="1.8"/><circle cx="19" cy="5" r="1.8"/>
+            <circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/>
+            <circle cx="5" cy="19" r="1.8"/><circle cx="12" cy="19" r="1.8"/><circle cx="19" cy="19" r="1.8"/>
+          </svg>
+        </button>
+        <div class="app-switcher-panel" id="appSwitcherPanel" role="menu">
+          <div class="app-grid">
+            <a class="app-item current" href="Buyer Hub - Dashboard.html"><div class="app-tile" style="background:#B05EC0">Pc</div><div class="app-label">Procure</div></a>
+            <a class="app-item" href="Procure - POS.html"><div class="app-tile" style="background:#3F8AFB">Po</div><div class="app-label">POS</div></a>
+          </div>
+          <div class="app-switcher-foot">
+            <span>buyer@restaurant.com</span>
+            <a href="#">View all →</a>
+          </div>
+        </div>
+      </div>
+      <div class="brand">
+        <img class="brand-logo-img" src="assets/nomni-logo-light.svg" alt="nomni" />
+        <div class="brand-sub">Procure</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <a href="#" class="help-btn">
+        <span class="material-symbols-outlined" aria-hidden="true">help</span>
+        Help
+      </a>
+      <div class="user">
+        <div class="avatar" aria-hidden="true">WA</div>
+        <span>William Arya</span>
+        <span class="chev" aria-hidden="true"></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== ORDER HEADER ===== -->
+  <div class="order-header">
+    <div class="order-header-left">
+      <a href="Buyer Hub - Orders.html" class="back-btn" aria-label="Back to orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </a>
+      <div>
+        <h1 class="order-header-title">Paranakan Trading Pte Ltd (T)</h1>
+        <p class="order-header-sub">Paranakan Trading Co. &bull; Min. order: S$10.00 &bull; Next delivery: 23 Apr (Thu)</p>
+      </div>
+    </div>
+    <div class="order-header-right">
+      <div class="subtotal-label">Subtotal: <span id="subtotalDisplay">S$0.00</span></div>
+      <button class="btn btn-primary" id="reviewBtn">Review (0 items)</button>
+    </div>
+  </div>
+
+  <!-- ===== ORDER BODY ===== -->
+  <div class="order-body">
+    <div class="order-filters">
+      <button class="btn btn-tertiary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/>
+        </svg>
+        Show filters
+      </button>
+      <div class="input">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" placeholder="Search SKU" />
+      </div>
+      <span class="entry-count">Showing <b>1 to 4</b> of 4 entries</span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="products">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-uom">UOM</th>
+            <th class="col-price">Unit price</th>
+            <th class="col-onhand">On hand</th>
+            <th class="col-par">Par</th>
+            <th class="col-qty">Quantity &nbsp;&middot;&nbsp; <a href="#" class="fill-par-link">Fill all to par</a></th>
+            <th class="col-amount">Amount (S$)</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- Row: Butter (unavailable) -->
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                Butter – 25kg carton
+                <span class="info-icon" title="Item info">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg>
+                </span>
+              </div>
+            </td>
+            <td class="muted-val">–</td>
+            <td class="muted-val">–</td>
+            <td class="muted-val">–</td>
+            <td class="muted-val">–</td>
+            <td>
+              <span class="unavailable">
+                Unavailable
+                <span class="info-icon" title="Why unavailable?">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg>
+                </span>
+              </span>
+            </td>
+            <td></td>
+          </tr>
+
+          <!-- Row: Cake Boxes (available) -->
+          <tr id="row-cake-boxes">
+            <td>
+              <div class="prod-name-cell">
+                Cake Boxes – Pack of 200
+                <span class="info-icon" title="Item info">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg>
+                </span>
+              </div>
+            </td>
+            <td>ctn</td>
+            <td>S$50.00</td>
+            <td class="muted-val">–</td>
+            <td class="muted-val">–</td>
+            <td id="qty-cell-cake-boxes">
+              <a href="#" class="add-to-order-link" data-product="cake-boxes" data-price="50">Add to order</a>
+            </td>
+            <td id="amount-cell-cake-boxes" class="col-amount"></td>
+          </tr>
+
+          <!-- Row: Cake Flour (unavailable) -->
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                Cake Flour – 20kg
+                <span class="info-icon" title="Item info">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg>
+                </span>
+              </div>
+            </td>
+            <td class="muted-val">–</td>
+            <td class="muted-val">–</td>
+            <td class="muted-val">–</td>
+            <td class="muted-val">–</td>
+            <td>
+              <span class="unavailable">
+                Unavailable
+                <span class="info-icon" title="Why unavailable?">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg>
+                </span>
+              </span>
+            </td>
+            <td></td>
+          </tr>
+
+          <!-- Row: Sugar (unavailable) -->
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                Sugar – 25kg pack
+                <span class="info-icon" title="Item info">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg>
+                </span>
+              </div>
+            </td>
+            <td class="muted-val">–</td>
+            <td class="muted-val">–</td>
+            <td class="muted-val">–</td>
+            <td class="muted-val">–</td>
+            <td>
+              <span class="unavailable">
+                Unavailable
+                <span class="info-icon" title="Why unavailable?">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg>
+                </span>
+              </span>
+            </td>
+            <td></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ===== REVIEW ORDER MODAL ===== -->
+<div class="modal-overlay hidden" id="reviewModal" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+  <div class="modal-dialog">
+
+    <div class="modal-header">
+      <h2 class="modal-title" id="reviewModalTitle">Review order: Paranakan Trading Pte Ltd (T)</h2>
+      <button class="modal-close" id="reviewModalClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Left: items + notes -->
+      <div class="modal-left">
+        <div class="modal-items-header">
+          <span class="modal-items-count" id="modalItemCount">1 item</span>
+          <a href="#" class="modal-fill-par">Fill all to par</a>
+        </div>
+
+        <div class="modal-item-row">
+          <span class="modal-item-name">Cake Boxes – Pack of 200</span>
+          <div class="qty-stepper">
+            <button type="button" id="modalDecBtn">−</button>
+            <input type="number" value="1" min="1" id="modalQty" />
+            <button type="button" id="modalIncBtn">+</button>
+          </div>
+          <span class="modal-item-amount" id="modalItemAmount">S$50.00</span>
+        </div>
+        <div class="modal-item-meta">
+          <span class="modal-item-price-unit">S$50.00/Carton</span>
+          <a href="#" class="modal-item-add-notes">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M18.375 2.625a1.5 1.5 0 0 1 2.121 2.121L12 13.5l-4 1 1-4Z"/></svg>
+            Add notes
+          </a>
+          <a href="#" class="modal-item-delete">Delete</a>
+        </div>
+
+        <a href="#" class="modal-add-more">+ Add more</a>
+
+        <hr class="modal-section-rule" />
+
+        <p class="modal-section-title">Notes/requests</p>
+
+        <div class="modal-field">
+          <label for="deliveryInstruction">Delivery instruction</label>
+          <select class="modal-select" id="deliveryInstruction">
+            <option value="">Select</option>
+            <option>Leave at door</option>
+            <option>Call on arrival</option>
+            <option>Ring doorbell</option>
+          </select>
+        </div>
+
+        <div class="modal-field">
+          <label for="specialRequests">Special requests</label>
+          <textarea class="modal-textarea" id="specialRequests" maxlength="150"></textarea>
+          <div class="modal-char-counter" id="charCounter">150 characters remaining</div>
+        </div>
+      </div>
+
+      <!-- Right: order summary -->
+      <div class="modal-right">
+        <p class="modal-summary-title">Order summary</p>
+
+        <div class="modal-summary-outlet">
+          <span class="material-symbols-outlined">location_on</span>
+          Test Outlet ZM
+        </div>
+        <div class="modal-summary-date">
+          <span class="material-symbols-outlined">calendar_today</span>
+          <a href="#" class="modal-summary-date-link">
+            Tue, 28 Apr 2026
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </a>
+        </div>
+
+        <hr class="modal-summary-divider" />
+
+        <div class="modal-summary-row">
+          <span>Est. subtotal</span>
+          <span class="val" id="summarySubtotal">S$50.00</span>
+        </div>
+        <a href="#" class="modal-promo-link">
+          <span class="material-symbols-outlined">local_offer</span>
+          Use promo code
+        </a>
+        <div class="modal-summary-row">
+          <span>GST</span>
+          <span class="val" id="summaryGst">S$4.50</span>
+        </div>
+        <hr class="modal-summary-divider" />
+        <div class="modal-summary-total-row">
+          <span>Est. total</span>
+          <span class="val" id="summaryTotal">S$54.50</span>
+        </div>
+        <p class="modal-summary-disclaimer">Prices &amp; calculations are estimates and not final.</p>
+      </div>
+
+    </div><!-- /modal-body -->
+
+    <div class="modal-footer">
+      <div class="modal-footer-left">
+        <a href="#" class="modal-delete-link">Delete</a>
+        <a href="#" class="modal-save-draft">Save draft</a>
+      </div>
+      <div class="modal-footer-right">
+        <span class="modal-footer-total" id="footerTotalLabel">Total (1 item) &middot; <strong>S$54.50</strong></span>
+        <button class="btn btn-primary" id="placeOrderBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Place order
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /modal-dialog -->
+</div><!-- /reviewModal -->
+
+<script>
+  /* App switcher */
+  (function(){
+    var btn = document.getElementById('appSwitcherBtn');
+    var panel = document.getElementById('appSwitcherPanel');
+    if (!btn || !panel) return;
+    function close(){ panel.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+    function toggle(e){
+      e.stopPropagation();
+      var isOpen = panel.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+    btn.addEventListener('click', toggle);
+    document.addEventListener('click', function(e){
+      if (!panel.contains(e.target) && e.target !== btn) close();
+    });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+  })();
+
+  /* Add to order / qty stepper */
+  (function(){
+    var orderItems = {};  /* product id → qty */
+
+    function formatSGD(val) {
+      return 'S$' + val.toFixed(2);
+    }
+
+    function updateTotals() {
+      var total = 0;
+      var count = 0;
+      Object.keys(orderItems).forEach(function(id) {
+        var item = orderItems[id];
+        if (item.qty > 0) {
+          total += item.qty * item.price;
+          count += item.qty;
+        }
+      });
+      document.getElementById('subtotalDisplay').textContent = formatSGD(total);
+      var noun = count === 1 ? 'item' : 'items';
+      document.getElementById('reviewBtn').textContent = 'Review (' + count + ' ' + noun + ')';
+    }
+
+    function renderQtyCell(productId, price) {
+      var cell = document.getElementById('qty-cell-' + productId);
+      var amountCell = document.getElementById('amount-cell-' + productId);
+      var item = orderItems[productId];
+
+      cell.innerHTML = '';
+      var stepper = document.createElement('div');
+      stepper.className = 'qty-stepper';
+
+      var decBtn = document.createElement('button');
+      decBtn.type = 'button';
+      decBtn.textContent = '−';
+      decBtn.addEventListener('click', function(){
+        if (item.qty > 1) {
+          item.qty--;
+          qtyInput.value = item.qty;
+          updateAmount();
+          updateTotals();
+        }
+      });
+
+      var qtyInput = document.createElement('input');
+      qtyInput.type = 'number';
+      qtyInput.value = item.qty;
+      qtyInput.min = '1';
+      qtyInput.addEventListener('change', function(){
+        var v = parseInt(this.value, 10);
+        if (isNaN(v) || v < 1) v = 1;
+        item.qty = v;
+        this.value = v;
+        updateAmount();
+        updateTotals();
+      });
+
+      var incBtn = document.createElement('button');
+      incBtn.type = 'button';
+      incBtn.textContent = '+';
+      incBtn.addEventListener('click', function(){
+        item.qty++;
+        qtyInput.value = item.qty;
+        updateAmount();
+        updateTotals();
+      });
+
+      stepper.appendChild(decBtn);
+      stepper.appendChild(qtyInput);
+      stepper.appendChild(incBtn);
+      cell.appendChild(stepper);
+
+      function updateAmount() {
+        amountCell.innerHTML = '';
+        var wrap = document.createElement('div');
+        wrap.className = 'amount-cell';
+        var val = document.createElement('span');
+        val.className = 'amount-val';
+        val.textContent = formatSGD(item.qty * price);
+        var check = document.createElement('span');
+        check.className = 'amount-check';
+        check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        wrap.appendChild(val);
+        wrap.appendChild(check);
+        amountCell.appendChild(wrap);
+      }
+      updateAmount();
+    }
+
+    document.querySelectorAll('.add-to-order-link').forEach(function(link){
+      link.addEventListener('click', function(e){
+        e.preventDefault();
+        var productId = this.dataset.product;
+        var price = parseFloat(this.dataset.price);
+        orderItems[productId] = { qty: 1, price: price };
+        renderQtyCell(productId, price);
+        updateTotals();
+      });
+    });
+  })();
+
+  /* Review modal */
+  (function(){
+    var overlay  = document.getElementById('reviewModal');
+    var closeBtn = document.getElementById('reviewModalClose');
+    var reviewBtn = document.getElementById('reviewBtn');
+    var textarea  = document.getElementById('specialRequests');
+    var charCounter = document.getElementById('charCounter');
+    var ITEM_PRICE = 50;
+    var GST_RATE   = 0.09;
+
+    function updateModalTotals() {
+      var qty = parseInt(document.getElementById('modalQty').value, 10) || 1;
+      var subtotal = qty * ITEM_PRICE;
+      var gst      = subtotal * GST_RATE;
+      var total    = subtotal + gst;
+      var noun     = qty === 1 ? 'item' : 'items';
+      document.getElementById('modalItemCount').textContent   = qty + ' ' + noun;
+      document.getElementById('modalItemAmount').textContent  = 'S$' + subtotal.toFixed(2);
+      document.getElementById('summarySubtotal').textContent  = 'S$' + subtotal.toFixed(2);
+      document.getElementById('summaryGst').textContent       = 'S$' + gst.toFixed(2);
+      document.getElementById('summaryTotal').textContent     = 'S$' + total.toFixed(2);
+      document.getElementById('footerTotalLabel').innerHTML   =
+        'Total (' + qty + ' ' + noun + ') &middot; <strong>S$' + total.toFixed(2) + '</strong>';
+    }
+
+    function openModal()  { overlay.classList.remove('hidden'); document.body.classList.add('modal-open'); updateModalTotals(); }
+    function closeModal() { overlay.classList.add('hidden');    document.body.classList.remove('modal-open'); }
+
+    if (reviewBtn) reviewBtn.addEventListener('click', openModal);
+    if (closeBtn)  closeBtn.addEventListener('click',  closeModal);
+    overlay.addEventListener('click', function(e){ if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && !overlay.classList.contains('hidden')) closeModal();
+    });
+
+    /* Qty stepper inside modal */
+    var qtyInput = document.getElementById('modalQty');
+    document.getElementById('modalDecBtn').addEventListener('click', function(){
+      var v = parseInt(qtyInput.value, 10);
+      if (v > 1) { qtyInput.value = v - 1; updateModalTotals(); }
+    });
+    document.getElementById('modalIncBtn').addEventListener('click', function(){
+      qtyInput.value = parseInt(qtyInput.value, 10) + 1;
+      updateModalTotals();
+    });
+    qtyInput.addEventListener('change', function(){
+      var v = parseInt(this.value, 10);
+      if (isNaN(v) || v < 1) v = 1;
+      this.value = v;
+      updateModalTotals();
+    });
+
+    /* Character counter */
+    if (textarea && charCounter) {
+      textarea.addEventListener('input', function(){
+        charCounter.textContent = (150 - this.value.length) + ' characters remaining';
+      });
+    }
+  })();
+</script>
+</body>
+</html>

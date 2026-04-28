@@ -6,19 +6,19 @@
 <title>Procure — Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
 <style>
   :root {
     --seaweed: #0E3727;
     --nomni-green: #2AC864;
-    --spinach: #076715;
+    --spinach: #1A8040;
     --cream: #FAF7E9;
     --mint: #E2FFE6;
 
-    --sidebar-bg: var(--seaweed);
-    --sidebar-item-active: #17452f;
-    --sidebar-text: var(--mint);
+    --sidebar-bg: #F5F5F5;
+    --sidebar-item-active: rgba(42, 200, 100, 0.14);
+    --sidebar-text: #111111;
 
     --ink: #1a1f2b;
     --ink-2: #3b4150;
@@ -33,9 +33,9 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #fff; }
   body {
-    font-family: "Source Sans Pro", system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
+    font-family: "Inter", system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
     color: var(--ink);
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.4;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -63,23 +63,23 @@
   .help-btn {
     background: transparent; border: none;
     color: rgba(255,255,255,.7); cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    padding: 4px; border-radius: 50%;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 10px; border-radius: 6px;
     transition: background .15s, color .15s;
-    margin-right: 4px; text-decoration: none;
+    text-decoration: none; font-size: 14px;
   }
   .help-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
-  .help-btn .material-symbols-outlined { font-size: 22px; line-height: 1; }
+  .help-btn .material-symbols-outlined { font-size: 18px; line-height: 1; }
   .brand { display: flex; align-items: center; gap: 8px; }
   .brand-logo-img { height: 26px; width: auto; display: block; }
   .brand-sub {
-    color: #B05EC0; font-weight: 400; font-size: 24px;
+    color: var(--nomni-green); font-weight: 400; font-size: 23px;
     font-family: "Hanken Grotesk", system-ui, sans-serif; line-height: 1;
   }
   .avatar {
     width: 32px; height: 32px; border-radius: 50%; background: #7F6AD0;
     color: #fff; display: inline-flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600;
+    font-size: 12px; font-weight: 600;
     font-family: "Hanken Grotesk", system-ui, sans-serif;
   }
   .user { display: flex; align-items: center; gap: 10px; font-weight: 400; color: #fff; }
@@ -114,7 +114,7 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   .app-switcher-title {
-    font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
     text-transform: uppercase; color: var(--ink-mute); margin: 0 0 12px 2px;
   }
   .app-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; }
@@ -127,18 +127,18 @@
   .app-tile {
     width: 52px; height: 52px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-weight: 700; font-size: 22px; letter-spacing: -0.02em;
+    color: #fff; font-weight: 700; font-size: 21px; letter-spacing: -0.02em;
     font-family: "Hanken Grotesk", system-ui, sans-serif;
   }
   .app-item.current .app-tile { outline: 2px solid var(--seaweed); outline-offset: 2px; }
-  .app-label { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .app-label { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.2; }
   .app-switcher-foot {
     border-top: 1px solid var(--rule); margin-top: 12px; padding-top: 12px;
     display: flex; align-items: center; justify-content: space-between;
-    font-size: 13px; color: var(--ink-mute);
+    font-size: 12px; color: var(--ink-mute);
   }
   .app-switcher-foot a { color: var(--primary-ink); text-decoration: none; font-weight: 600; }
-  .app-switcher-foot a:hover { color: var(--nomni-green); }
+  .app-switcher-foot a:hover { color: #1A8040; }
 
   /* ── Sidebar ── */
   .sidebar {
@@ -155,17 +155,17 @@
     display: flex; align-items: center; gap: 12px;
     padding: 10px 12px; color: var(--sidebar-text);
     text-decoration: none; border-radius: 6px;
-    font-size: 16px; font-weight: 400;
+    font-size: 14px; font-weight: 400;
     transition: background-color .15s ease, color .15s ease;
   }
-  .nav a .icon { width: 18px; height: 18px; color: var(--mint); flex: 0 0 18px; transition: color .15s ease; }
-  .nav a:hover { background: rgba(42,200,100,.16); color: #fff; }
-  .nav a:hover .icon { color: var(--nomni-green); }
-  .nav a.active { background: var(--sidebar-item-active); color: #fff; }
+  .nav a .icon { width: 18px; height: 18px; color: #888888; flex: 0 0 18px; transition: color .15s ease; }
+  .nav a:hover { background: rgba(0,0,0,.05); color: #111; }
+  .nav a:hover .icon { color: #888; }
+  .nav a.active { background: var(--sidebar-item-active); color: var(--seaweed); font-weight: 600; }
   .nav a.active .icon { color: var(--nomni-green); }
   .nav .badge {
     margin-left: auto; background: var(--nomni-green); color: var(--seaweed);
-    font-size: 11px; font-weight: 700; min-width: 18px; height: 18px;
+    font-size: 10px; font-weight: 700; min-width: 18px; height: 18px;
     padding: 0 5px; border-radius: 9px; display: inline-grid; place-items: center;
   }
   .sidebar-foot { padding: 16px; }
@@ -184,23 +184,25 @@
 
   /* ── Buttons ── */
   .btn {
-    font-family: inherit; font-size: 16px; font-weight: 600; border-radius: 6px;
+    font-family: inherit; font-size: 14px; font-weight: 600; border-radius: 6px;
     padding: 10px 16px; border: 1px solid transparent; cursor: pointer;
     display: inline-flex; align-items: center; gap: 8px; line-height: 1;
     white-space: nowrap; transition: background-color .18s ease, color .18s ease, border-color .18s ease;
   }
   .btn-primary { background: var(--nomni-green); color: var(--seaweed); border-color: var(--nomni-green); }
   .btn-primary:hover { background: var(--seaweed); color: var(--nomni-green); border-color: var(--seaweed); }
-  .btn-secondary { background: #fff; color: var(--ink-2); border-color: #d0d2d8; }
-  .btn-secondary:hover { background: #f3f4f6; color: var(--ink); border-color: #c0c2c8; }
+  .btn-secondary { background: var(--mint); color: var(--seaweed); border-color: var(--mint); }
+  .btn-secondary:hover { background: #c6f2ce; color: var(--seaweed); border-color: #c6f2ce; }
+  .btn-tertiary { background: #f3f4f6; color: var(--ink-2); border-color: transparent; }
+  .btn-tertiary:hover { background: #e6e8ec; color: var(--ink); border-color: transparent; }
 
   /* ── Welcome header ── */
   .dash-header {
     display: flex; align-items: flex-start; justify-content: space-between;
     margin-bottom: 28px; gap: 16px;
   }
-  .dash-welcome { font-size: 30px; font-weight: 700; color: var(--ink); margin: 0 0 6px; letter-spacing: -0.03em; line-height: 1; }
-  .dash-subtitle { font-size: 16px; color: var(--ink-2); margin: 0; }
+  .dash-welcome { font-size: 29px; font-weight: 700; color: var(--ink); margin: 0 0 6px; letter-spacing: -0.03em; line-height: 1; }
+  .dash-subtitle { font-size: 14px; color: var(--ink-2); margin: 0; }
   .dash-subtitle b { color: var(--ink); font-weight: 700; }
   .dash-actions { display: flex; gap: 10px; flex-shrink: 0; }
 
@@ -221,7 +223,7 @@
     border-right: 1px solid var(--rule);
   }
   .metrics-group-label {
-    font-size: 14px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
     color: var(--ink-mute); padding: 14px 20px 10px;
     border-bottom: 1px solid var(--rule);
   }
@@ -243,10 +245,10 @@
   }
   .metric-icon svg { width: 22px; height: 22px; }
   .metric-period {
-    font-size: 14px; color: var(--ink-mute); margin-bottom: 6px; font-weight: 400;
+    font-size: 13px; color: var(--ink-mute); margin-bottom: 6px; font-weight: 400;
   }
   .metric-amount {
-    font-size: 30px; font-weight: 700; color: var(--ink);
+    font-size: 29px; font-weight: 700; color: var(--ink);
     font-variant-numeric: tabular-nums; letter-spacing: -0.03em; line-height: 1;
   }
 
@@ -270,11 +272,11 @@
     margin-bottom: 20px; gap: 16px;
   }
   .dash-section-left { display: flex; align-items: center; gap: 12px; }
-  .dash-section-title { font-size: 24px; font-weight: 600; color: var(--ink); margin: 0; letter-spacing: -0.02em; }
+  .dash-section-title { font-size: 23px; font-weight: 600; color: var(--ink); margin: 0; letter-spacing: -0.02em; }
 
   /* outlet select */
   .outlet-select {
-    font-family: inherit; font-size: 14px; color: var(--ink-2);
+    font-family: inherit; font-size: 13px; color: var(--ink-2);
     background: #fff; border: 1px solid #d0d2d8; border-radius: 6px;
     padding: 5px 28px 5px 10px; cursor: pointer; appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238a8f98' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -286,7 +288,7 @@
     display: flex; border: 1px solid #d0d2d8; border-radius: 6px; overflow: hidden;
   }
   .period-btn {
-    font-family: inherit; font-size: 16px; font-weight: 600; color: var(--ink-mute);
+    font-family: inherit; font-size: 14px; font-weight: 600; color: var(--ink-mute);
     background: #fff; border: none; border-left: 1px solid #d0d2d8;
     padding: 6px 14px; cursor: pointer; line-height: 1;
     transition: background-color .15s ease, color .15s ease;
@@ -297,11 +299,11 @@
 
   /* view link */
   .view-link {
-    font-size: 14px; font-weight: 600; color: var(--primary-ink);
+    font-size: 13px; font-weight: 600; color: var(--primary-ink);
     text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
     margin-left: auto;
   }
-  .view-link:hover { color: var(--nomni-green); }
+  .view-link:hover { color: #1A8040; }
   .view-link .chev { border-color: currentColor; }
   .chev.right { transform: rotate(-45deg) translate(1px,1px); }
 
@@ -309,8 +311,8 @@
   .spend-meta {
     display: flex; gap: 32px; margin-bottom: 20px;
   }
-  .spend-meta-item .spend-meta-label { font-size: 18px; color: var(--ink-mute); margin-bottom: 3px; }
-  .spend-meta-item .spend-meta-val { font-size: 24px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .spend-meta-item .spend-meta-label { font-size: 17px; color: var(--ink-mute); margin-bottom: 3px; }
+  .spend-meta-item .spend-meta-val { font-size: 23px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
 
   /* bar chart */
   .chart-wrap {
@@ -325,7 +327,7 @@
     position: absolute; left: 0; top: 20px; bottom: 36px;
     display: flex; flex-direction: column; justify-content: space-between;
     padding: 0 12px 0 16px;
-    font-size: 12px; color: var(--ink-mute); text-align: right;
+    font-size: 11px; color: var(--ink-mute); text-align: right;
     width: 90px;
     pointer-events: none;
   }
@@ -357,7 +359,7 @@
     padding: 8px 16px 12px;
     display: flex; gap: 6px;
   }
-  .chart-xaxis-label { flex: 1; text-align: center; font-size: 11px; color: var(--ink-mute); }
+  .chart-xaxis-label { flex: 1; text-align: center; font-size: 10px; color: var(--ink-mute); }
 
   /* ── Top expenditures ── */
   .top-exp-body {
@@ -375,7 +377,7 @@
   .top-exp-tab {
     display: flex; align-items: center; gap: 10px;
     padding: 14px 18px;
-    font-size: 16px; font-weight: 400; color: var(--ink-2);
+    font-size: 14px; font-weight: 400; color: var(--ink-2);
     cursor: pointer; border-bottom: 1px solid var(--rule);
     transition: background-color .12s ease;
   }
@@ -388,7 +390,7 @@
     padding: 40px 24px; background: #fff;
   }
   .empty-state {
-    text-align: center; color: var(--ink-mute); font-size: 14px;
+    text-align: center; color: var(--ink-mute); font-size: 13px;
   }
   .empty-state svg { display: block; margin: 0 auto 12px; color: #c7c9cf; }
 </style>
@@ -424,8 +426,9 @@
       </div>
     </div>
     <div class="topbar-right">
-      <a href="#" class="help-btn" title="Knowledge base" aria-label="Knowledge base">
+      <a href="#" class="help-btn">
         <span class="material-symbols-outlined" aria-hidden="true">help</span>
+        Help
       </a>
       <div class="user">
         <div class="avatar" aria-hidden="true">WA</div>

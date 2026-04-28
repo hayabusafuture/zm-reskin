@@ -6,23 +6,23 @@
 <title>Procure — Orders</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
 <style>
   :root {
     /* Nomni brand */
     --seaweed: #0E3727;
     --nomni-green: #2AC864;
-    --spinach: #076715;
+    --spinach: #1A8040;
     --cream: #FAF7E9;
     --mint: #E2FFE6;
 
-    --sidebar-bg: var(--seaweed);
-    --sidebar-bg-2: #0a2a1d;
-    --sidebar-item-active: #17452f;
-    --sidebar-text: var(--mint);
-    --sidebar-text-dim: #9ec8ae;
-    --sidebar-border: #17452f;
+    --sidebar-bg: #F5F5F5;
+    --sidebar-bg-2: #ebebeb;
+    --sidebar-item-active: rgba(42, 200, 100, 0.14);
+    --sidebar-text: #111111;
+    --sidebar-text-dim: #666666;
+    --sidebar-border: #e0e0e0;
 
     --bg: #f4f4f6;
     --panel: #ffffff;
@@ -50,9 +50,9 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #fff; }
   body {
-    font-family: "Source Sans Pro", system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
+    font-family: "Inter", system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
     color: var(--ink);
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.4;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -102,13 +102,13 @@
   .help-btn {
     background: transparent; border: none;
     color: rgba(255,255,255,.7); cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    padding: 4px; border-radius: 50%;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 10px; border-radius: 6px;
     transition: background .15s, color .15s;
-    margin-right: 4px; text-decoration: none;
+    text-decoration: none; font-size: 14px;
   }
   .help-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
-  .help-btn .material-symbols-outlined { font-size: 22px; line-height: 1; }
+  .help-btn .material-symbols-outlined { font-size: 18px; line-height: 1; }
   .app-switcher {
     position: relative;
   }
@@ -149,7 +149,7 @@
     to { opacity: 1; transform: translateY(0); }
   }
   .app-switcher-title {
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -184,7 +184,7 @@
     justify-content: center;
     color: #fff;
     font-weight: 700;
-    font-size: 22px;
+    font-size: 20px;
     letter-spacing: -0.02em;
     font-family: "Hanken Grotesk", system-ui, sans-serif;
   }
@@ -193,7 +193,7 @@
     outline-offset: 2px;
   }
   .app-label {
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--ink);
     line-height: 1.2;
@@ -205,7 +205,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 13px;
+    font-size: 11px;
     color: var(--ink-mute);
   }
   .app-switcher-foot a {
@@ -213,7 +213,7 @@
     text-decoration: none;
     font-weight: 600;
   }
-  .app-switcher-foot a:hover { color: var(--nomni-green); }
+  .app-switcher-foot a:hover { color: #1A8040; }
 
   /* ---------- Sidebar ---------- */
   .sidebar {
@@ -239,9 +239,9 @@
     display: block;
   }
   .brand-sub {
-    color: #B05EC0;
+    color: var(--nomni-green);
     font-weight: 400;
-    font-size: 24px;
+    font-size: 22px;
     padding-left: 0;
     margin-left: 0;
     font-family: "Hanken Grotesk", system-ui, sans-serif;
@@ -261,25 +261,26 @@
     color: var(--sidebar-text);
     text-decoration: none;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     position: relative;
     transition: background-color .15s ease, color .15s ease;
   }
   .nav a .icon {
     width: 18px; height: 18px;
-    color: var(--mint);
+    color: #888888;
     flex: 0 0 18px;
     transition: color .15s ease;
   }
   .nav a:hover {
-    background: rgba(42, 200, 100, 0.16);
-    color: #fff;
+    background: rgba(0, 0, 0, 0.05);
+    color: #111;
   }
-  .nav a:hover .icon { color: var(--nomni-green); }
+  .nav a:hover .icon { color: #888; }
   .nav a.active {
     background: var(--sidebar-item-active);
-    color: #fff;
+    color: var(--seaweed);
+    font-weight: 600;
   }
   .nav a.active .icon { color: var(--nomni-green); }
 
@@ -287,7 +288,7 @@
     margin-left: auto;
     background: var(--nomni-green);
     color: var(--seaweed);
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 700;
     min-width: 18px;
     height: 18px;
@@ -326,7 +327,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.02em;
     font-family: "Hanken Grotesk", system-ui, sans-serif;
@@ -345,7 +346,7 @@
     margin: 0 2px 18px;
   }
   .page-title {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.01em;
@@ -357,7 +358,7 @@
 
   .btn {
     font-family: inherit;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     border-radius: 6px;
     padding: 10px 16px;
@@ -380,11 +381,15 @@
     border-color: var(--seaweed);
   }
   .btn-secondary {
-    background: #fff;
-    color: var(--ink-2);
-    border-color: #d0d2d8;
+    background: var(--mint);
+    color: var(--seaweed);
+    border-color: var(--mint);
   }
-  .btn-secondary:hover { background: #f3f4f6; color: var(--ink); border-color: #c0c2c8; }
+  .btn-secondary:hover { background: #c6f2ce; color: var(--seaweed); border-color: #c6f2ce; }
+  .btn-tertiary {
+    background: #f3f4f6; color: var(--ink-2); border-color: transparent;
+  }
+  .btn-tertiary:hover { background: #e6e8ec; color: var(--ink); border-color: transparent; }
   .btn-ghost {
     background: transparent;
     color: var(--ink-2);
@@ -392,6 +397,48 @@
     padding: 8px 6px;
   }
   .btn-ghost:hover { color: var(--ink); }
+
+  /* ---------- Split button dropdown ---------- */
+  .split-btn-wrap {
+    position: relative;
+    display: inline-flex;
+  }
+  .split-btn-main {
+    border-radius: 6px 0 0 6px;
+    border-right: none;
+  }
+  .split-btn-caret {
+    border-radius: 0 6px 6px 0;
+    padding: 10px 10px;
+    border-left: 1px solid rgba(255,255,255,.25);
+  }
+  .split-btn-caret .chev {
+    margin-left: 0;
+  }
+  .split-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 200px;
+    background: #fff;
+    border: 1px solid #e0e2e8;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    z-index: 400;
+    overflow: hidden;
+  }
+  .split-dropdown.open { display: block; }
+  .split-dropdown a {
+    display: block;
+    padding: 11px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1A8040;
+    text-decoration: none;
+    transition: background .12s;
+  }
+  .split-dropdown a:hover { background: var(--mint); }
 
   /* ---------- Tabs ---------- */
   .tabs {
@@ -406,7 +453,7 @@
     padding: 10px 2px 14px;
     color: var(--ink-2);
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -425,7 +472,7 @@
   .tab .count {
     background: var(--nomni-green);
     color: var(--seaweed);
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 700;
     padding: 2px 8px;
     border-radius: 10px;
@@ -447,7 +494,7 @@
     border: 1px solid #dcdee3;
     border-radius: 6px;
     padding: 9px 12px;
-    font-size: 15px;
+    font-size: 14px;
     color: var(--ink-2);
     min-height: 38px;
   }
@@ -458,17 +505,17 @@
     width: 100%;
   }
   .input input::placeholder { color: var(--ink-mute); }
-  .input--date { width: 220px; }
+  .input--date { width: 260px; }
   .input--search { width: 230px; }
   .input--placed { width: 180px; }
 
   .filter-right { margin-left: auto; }
   .filter-btn {
-    color: var(--primary);
+    color: #1A8040;
     background: transparent;
     border: 0;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     font-family: inherit;
     cursor: pointer;
     display: inline-flex;
@@ -485,7 +532,7 @@
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    font-size: 15px;
+    font-size: 14px;
   }
   .orders thead th {
     text-align: left;
@@ -495,7 +542,7 @@
     border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule);
     background: #fff;
-    font-size: 14px;
+    font-size: 12px;
     white-space: nowrap;
   }
   .orders thead th.sort::after {
@@ -541,7 +588,7 @@
   }
   .cell-date .code {
     display: block;
-    font-size: 13px;
+    font-size: 11px;
     color: var(--ink-mute);
     margin-top: 4px;
     font-weight: 400;
@@ -570,7 +617,7 @@
     gap: 6px;
     padding: 3px 10px 3px 10px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -598,7 +645,7 @@
     margin-left: 2px;
   }
   .email-state {
-    font-size: 13px;
+    font-size: 11px;
     color: var(--ink-mute);
     margin-top: 4px;
     font-weight: 400;
@@ -611,7 +658,7 @@
     justify-content: space-between;
     padding: 16px 4px 20px;
     color: var(--ink-2);
-    font-size: 14px;
+    font-size: 12px;
   }
   .pager .count b { color: var(--ink); }
   .page-input {
@@ -633,6 +680,108 @@
     transform: rotate(45deg) translate(-1px,-1px);
   }
   .chev.up { transform: rotate(-135deg) translate(-1px,-1px); }
+
+  /* ---------- Supplier select modal ---------- */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(10,20,15,.48);
+    z-index: 900;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 80px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-card {
+    background: #fff;
+    border-radius: 14px;
+    width: 490px;
+    max-width: calc(100vw - 32px);
+    box-shadow: 0 24px 64px rgba(0,0,0,.22);
+    position: relative;
+    max-height: calc(100vh - 120px);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .modal-close {
+    position: absolute; top: 14px; right: 14px;
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-mute); font-size: 18px; line-height: 1;
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: color .12s, background .12s;
+  }
+  .modal-close:hover { color: var(--ink); background: #f3f4f6; }
+  .modal-head {
+    padding: 22px 24px 18px;
+    text-align: center;
+    border-bottom: 1px solid var(--rule);
+    flex: 0 0 auto;
+  }
+  .modal-eyebrow {
+    font-size: 12px; color: var(--ink-2); font-weight: 400; margin-bottom: 4px;
+  }
+  .modal-outlet-btn {
+    background: none; border: none; cursor: pointer; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 19px; font-weight: 700; color: var(--nomni-green);
+    padding: 0; line-height: 1.3; letter-spacing: -.01em;
+  }
+  .modal-outlet-btn .chev { color: var(--nomni-green); width: 8px; height: 8px; border-width: 1.5px; }
+  .modal-search-wrap {
+    padding: 12px 16px 10px;
+    border-bottom: 1px solid var(--rule);
+    flex: 0 0 auto;
+  }
+  .modal-search {
+    width: 100%; padding: 9px 14px 9px 38px;
+    border: 1px solid #dcdee3; border-radius: 8px;
+    font: inherit; font-size: 13px; color: var(--ink); outline: none;
+    background: #fafafa url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 12px center;
+  }
+  .modal-search:focus { border-color: var(--nomni-green); background-color: #fff; }
+  .modal-search::placeholder { color: var(--ink-mute); }
+  .modal-supplier-list { overflow-y: auto; flex: 1; padding: 4px 0; }
+  .modal-supplier-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 20px;
+    text-decoration: none; color: var(--ink);
+    transition: background .12s;
+  }
+  .modal-supplier-item:hover { background: #f7f8fa; }
+  .modal-supplier-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: #ede0f5; color: var(--nomni-green);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex: 0 0 40px;
+    letter-spacing: -.02em; font-family: "Hanken Grotesk", system-ui, sans-serif;
+  }
+  .modal-supplier-avatar.muted { background: #e8eaef; color: var(--ink-2); }
+  .modal-supplier-info { flex: 1; min-width: 0; }
+  .modal-supplier-name {
+    font-weight: 600; font-size: 13px; color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .modal-supplier-sub { font-size: 11px; color: var(--ink-mute); margin-top: 2px; }
+  .modal-supplier-delivery { font-size: 11px; color: var(--ink-2); white-space: nowrap; flex: 0 0 auto; }
+  .modal-add-icon {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--mint); color: var(--nomni-green);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 300; flex: 0 0 40px;
+    line-height: 1;
+  }
+  .badge-new {
+    background: var(--mint); color: #0a8a3a;
+    font-size: 8px; font-weight: 700; letter-spacing: .05em;
+    padding: 2px 6px; border-radius: 4px; text-transform: uppercase;
+  }
+  .modal-foot {
+    padding: 12px 20px 16px;
+    font-size: 11px; color: var(--ink-mute);
+    border-top: 1px solid var(--rule); line-height: 1.5;
+    flex: 0 0 auto;
+  }
 </style>
 </head>
 <body>
@@ -666,8 +815,9 @@
       </div>
     </div>
     <div class="topbar-right">
-      <a href="#" class="help-btn" title="Knowledge base" aria-label="Knowledge base">
+      <a href="#" class="help-btn">
         <span class="material-symbols-outlined" aria-hidden="true">help</span>
+        Help
       </a>
       <div class="user">
         <div class="avatar" aria-hidden="true">WA</div>
@@ -709,7 +859,16 @@
     <header class="page-head">
       <h1 class="page-title">Orders</h1>
       <div class="page-actions">
-        <button class="btn btn-primary">New order <span class="chev" aria-hidden="true"></span></button>
+        <div class="split-btn-wrap" id="newOrderWrap">
+          <button class="btn btn-primary split-btn-main">New order</button>
+          <button class="btn btn-primary split-btn-caret" id="newOrderCaret" aria-label="More order types"><span class="chev" aria-hidden="true"></span></button>
+          <div class="split-dropdown" id="newOrderDropdown">
+            <a href="#" id="orderBySupplierLink">Order by supplier</a>
+            <a href="Buyer Hub - New Order - Item.html">Order by item</a>
+            <a href="#">New recurring order</a>
+            <a href="#">New weekly order</a>
+          </div>
+        </div>
         <button class="btn btn-secondary">Download <span class="chev" aria-hidden="true"></span></button>
         <button class="btn btn-ghost">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg>
@@ -743,7 +902,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
           <span>Placed on</span>
         </label>
-        <button class="btn btn-primary">Search</button>
+        <button class="btn btn-tertiary">Search</button>
         <div class="filter-right">
           <button class="filter-btn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16l-6 8v6l-4-2v-4L4 5z"/></svg>
@@ -851,6 +1010,49 @@
   });
   document.getElementById("rows").style.cursor = "pointer";
 </script>
+
+<!-- ===== Supplier select modal ===== -->
+<div class="modal-overlay" id="supplierModal" role="dialog" aria-modal="true" aria-label="Select supplier">
+  <div class="modal-card">
+    <button class="modal-close" id="supplierModalClose" aria-label="Close">&times;</button>
+    <div class="modal-head">
+      <div class="modal-eyebrow">Create a new order for:</div>
+      <button class="modal-outlet-btn">Pedro Restaurant HQ <span class="chev" aria-hidden="true"></span></button>
+    </div>
+    <div class="modal-search-wrap">
+      <input type="text" class="modal-search" placeholder="Search suppliers" />
+    </div>
+    <div class="modal-supplier-list">
+      <a href="Buyer Hub - New Order - Supplier.html" class="modal-supplier-item">
+        <div class="modal-supplier-avatar">PT</div>
+        <div class="modal-supplier-info">
+          <div class="modal-supplier-name">Paranakan Trading Pte Ltd (T)</div>
+          <div class="modal-supplier-sub">Paranakan Trading Co. &bull; 4 item(s) below par</div>
+        </div>
+        <div class="modal-supplier-delivery">Next delivery: 23 Apr (Thu)</div>
+      </a>
+      <a href="#" class="modal-supplier-item">
+        <div class="modal-supplier-avatar muted">TS</div>
+        <div class="modal-supplier-info">
+          <div class="modal-supplier-name">Test Supplier</div>
+          <div class="modal-supplier-sub">Supplier name AKS</div>
+        </div>
+        <div class="modal-supplier-delivery">Next delivery: 27 Apr (Mon)</div>
+      </a>
+      <a href="#" class="modal-supplier-item">
+        <div class="modal-add-icon">+</div>
+        <div class="modal-supplier-info">
+          <div class="modal-supplier-name">Add supplier <span class="badge-new">NEW</span></div>
+          <div class="modal-supplier-sub">Supplier not listed here? Search &amp; add from our supplier directory</div>
+        </div>
+      </a>
+    </div>
+    <div class="modal-foot">
+      Suppliers with no orders from this outlet for more than 365 days will be automatically removed from this list.
+    </div>
+  </div>
+</div>
+
 <script>
   (function(){
     var btn = document.getElementById('appSwitcherBtn');
@@ -870,5 +1072,36 @@
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
   })();
 </script>
+<script>
+  (function(){
+    var supplierLink = document.getElementById('orderBySupplierLink');
+    var overlay = document.getElementById('supplierModal');
+    var closeBtn = document.getElementById('supplierModalClose');
+    function openModal(e){ e.preventDefault(); overlay.classList.add('open'); document.getElementById('newOrderDropdown').classList.remove('open'); }
+    function closeModal(){ overlay.classList.remove('open'); }
+    if(supplierLink) supplierLink.addEventListener('click', openModal);
+    if(closeBtn) closeBtn.addEventListener('click', closeModal);
+    if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeModal(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape' && overlay && overlay.classList.contains('open')) closeModal(); });
+  })();
+
+  (function(){
+    var caret = document.getElementById('newOrderCaret');
+    var dropdown = document.getElementById('newOrderDropdown');
+    if (!caret || !dropdown) return;
+    function close(){ dropdown.classList.remove('open'); }
+    function toggle(e){
+      e.stopPropagation();
+      dropdown.classList.toggle('open');
+    }
+    caret.addEventListener('click', toggle);
+    document.addEventListener('click', function(e){
+      if (!dropdown.contains(e.target) && e.target !== caret) close();
+    });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+  })();
+</script>
+
+
 </body>
 </html>

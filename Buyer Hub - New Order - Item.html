@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Procure — Create Order</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+<style>
+  :root {
+    --seaweed: #0E3727;
+    --nomni-green: #2AC864;
+    --mint: #E2FFE6;
+    --ink: #1a1f2b;
+    --ink-2: #3b4150;
+    --ink-mute: #8a8f98;
+    --rule: #e7e8ec;
+    --row-hover: #f7f8fa;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+  body {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    color: var(--ink); font-size: 15px; line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- App shell ---------- */
+  .app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+  /* ---------- Topbar ---------- */
+  .topbar {
+    background: #1f2226; color: #fff; flex: 0 0 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 22px 0 11px; border-bottom: 1px solid #000; z-index: 10;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .topbar-right { display: flex; align-items: center; gap: 4px; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .help-btn {
+    background: transparent; border: none;
+    color: rgba(255,255,255,.7); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 10px; border-radius: 6px;
+    transition: background .15s, color .15s;
+    text-decoration: none; font-size: 14px;
+  }
+  .help-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+  .help-btn .material-symbols-outlined { font-size: 18px; line-height: 1; }
+  .app-switcher { position: relative; }
+  .app-switcher-btn {
+    background: transparent; border: 0; color: #fff;
+    width: 40px; height: 40px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background-color .15s;
+  }
+  .app-switcher-btn:hover { background: rgba(255,255,255,.08); }
+  .app-switcher-btn.open { background: rgba(255,255,255,.12); }
+  .app-switcher-btn svg { width: 20px; height: 20px; }
+  .app-switcher-panel {
+    position: absolute; top: calc(100% + 8px); left: 0; width: 360px;
+    background: #fff; color: var(--ink); border-radius: 10px;
+    box-shadow: 0 14px 40px rgba(10,20,15,.22), 0 2px 8px rgba(10,20,15,.08);
+    padding: 18px 18px 14px; display: none; z-index: 40;
+    animation: switcherIn .14s ease-out;
+  }
+  .app-switcher-panel.open { display: block; }
+  @keyframes switcherIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+  .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .app-item {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 12px 6px; border-radius: 8px; text-decoration: none; color: var(--ink);
+    transition: background-color .12s; gap: 8px;
+  }
+  .app-item:hover { background: #f3f4f6; }
+  .app-tile {
+    width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 21px;
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+  }
+  .app-item.current .app-tile { outline: 2px solid var(--seaweed); outline-offset: 2px; }
+  .app-label { font-size: 12px; font-weight: 600; color: var(--ink); }
+  .app-switcher-foot {
+    border-top: 1px solid var(--rule); margin-top: 12px; padding-top: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--ink-mute);
+  }
+  .app-switcher-foot a { color: var(--seaweed); text-decoration: none; font-weight: 600; }
+  .app-switcher-foot a:hover { color: #1A8040; }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand-logo-img { height: 26px; width: auto; display: block; }
+  .brand-sub { color: var(--nomni-green); font-weight: 400; font-size: 23px; font-family: "Hanken Grotesk", system-ui, sans-serif; line-height: 1; }
+  .user { display: flex; align-items: center; gap: 10px; font-weight: 400; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%; background: #7F6AD0; color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; font-family: "Hanken Grotesk", system-ui, sans-serif;
+  }
+  .chev {
+    width: 10px; height: 10px; display: inline-block;
+    border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translate(-1px,-1px);
+  }
+  .user .chev { color: #c9ccd1; }
+
+  /* ---------- Content shell ---------- */
+  .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; background: #fff; }
+
+  /* ---------- Order top bar ---------- */
+  .order-top {
+    flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px; border-bottom: 1px solid var(--rule);
+  }
+  .order-top-left { display: flex; align-items: flex-start; gap: 12px; }
+  .back-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 7px;
+    background: transparent; border: 1px solid var(--rule);
+    color: var(--ink-2); text-decoration: none; flex: 0 0 32px; margin-top: 3px;
+    transition: background .12s, border-color .12s;
+  }
+  .back-btn:hover { background: #f3f4f6; border-color: #c0c2c8; }
+  .back-btn svg { width: 15px; height: 15px; }
+  .create-title { font-size: 19px; font-weight: 700; color: var(--ink); margin: 0 0 3px; letter-spacing: -.01em; }
+  .outlet-selector-btn {
+    background: none; border: none; cursor: pointer; font: inherit; font-size: 13px;
+    font-weight: 600; color: var(--nomni-green); padding: 0;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .outlet-selector-btn .chev { width: 7px; height: 7px; border-width: 1.5px; color: var(--nomni-green); }
+  .order-top-right {}
+  .search-item-wrap {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid #dcdee3; border-radius: 6px; padding: 7px 14px;
+    width: 240px;
+  }
+  .search-item-wrap svg { color: var(--ink-mute); flex: 0 0 auto; }
+  .search-item-wrap input {
+    border: 0; outline: 0; background: transparent; font: inherit;
+    color: var(--ink); width: 100%;
+  }
+  .search-item-wrap input::placeholder { color: var(--ink-mute); }
+
+  /* ---------- Filter bar ---------- */
+  .filter-bar {
+    flex: 0 0 auto;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 24px; border-bottom: 1px solid var(--rule);
+  }
+  .filter-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 11px; border-radius: 20px;
+    border: 1px solid var(--rule); background: #fff;
+    font: inherit; font-size: 13px; color: var(--ink-2);
+    cursor: pointer; transition: background .12s, border-color .12s;
+    white-space: nowrap;
+  }
+  .filter-pill:hover { background: #f3f4f6; border-color: #c0c2c8; }
+  .filter-pill svg { width: 12px; height: 12px; flex: 0 0 12px; }
+  .item-range { margin-left: auto; font-size: 13px; color: var(--ink-mute); }
+
+  /* ---------- Order body split ---------- */
+  .order-body { flex: 1; display: flex; overflow: hidden; min-height: 0; }
+
+  /* ---------- Product list (left) ---------- */
+  .order-main { flex: 1; overflow-y: auto; min-width: 0; }
+  table.products {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+  }
+  .products thead th {
+    text-align: left; font-weight: 600; color: var(--ink-2);
+    padding: 9px 14px; font-size: 12px; white-space: nowrap;
+    border-bottom: 2px solid var(--rule);
+    background: #f9fafb; position: sticky; top: 0; z-index: 1;
+  }
+  .products thead th.col-qty { text-align: right; }
+  .products tbody td { padding: 12px 14px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  .products tbody tr:hover td { background: var(--row-hover); }
+  .col-check { width: 32px; padding-right: 4px; }
+  .col-name { min-width: 210px; }
+  .col-price { width: 90px; }
+  .col-onhand { width: 80px; }
+  .col-par { width: 70px; }
+  .col-qty { width: 150px; text-align: right; }
+  .row-check {
+    appearance: none; -webkit-appearance: none;
+    width: 15px; height: 15px; border: 1.5px solid #c7c9cf; border-radius: 3px;
+    cursor: pointer; display: block; transition: background .1s, border-color .1s;
+  }
+  .row-check:checked {
+    background: var(--nomni-green); border-color: var(--nomni-green);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-size: 9px 9px; background-repeat: no-repeat; background-position: center;
+  }
+  .prod-code { font-size: 11px; color: var(--ink-mute); margin-bottom: 1px; }
+  .prod-name { font-weight: 600; font-size: 15px; color: var(--ink); display: flex; align-items: center; gap: 5px; }
+  .prod-supplier { font-size: 12px; color: var(--ink-mute); margin-top: 1px; }
+  .info-icon { color: var(--ink-mute); flex: 0 0 auto; cursor: pointer; display: inline-flex; }
+  .info-icon:hover { color: var(--ink-2); }
+  .price-val { font-weight: 600; font-size: 15px; }
+  .price-unit { font-size: 11px; color: var(--ink-mute); }
+  .muted-val { color: var(--ink-mute); }
+  .add-link { color: #1A8040; font-weight: 600; text-decoration: none; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
+  .add-link:hover { text-decoration: underline; }
+  .fill-link { color: #1A8040; font-weight: 600; text-decoration: none; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
+  .fill-link:hover { text-decoration: underline; }
+  .qty-stepper { display: inline-flex; align-items: center; border: 1px solid #d0d2d8; border-radius: 5px; overflow: hidden; }
+  .qty-stepper button {
+    width: 26px; height: 26px; background: #f3f4f6; border: none; cursor: pointer;
+    font-size: 15px; line-height: 1; color: var(--ink-2); display: flex; align-items: center;
+    justify-content: center; transition: background .12s; font-family: inherit;
+  }
+  .qty-stepper button:hover { background: #e6e8ec; }
+  .qty-stepper input {
+    width: 36px; height: 26px; border: none;
+    border-left: 1px solid #d0d2d8; border-right: 1px solid #d0d2d8;
+    text-align: center; font: inherit; font-size: 15px; font-weight: 600;
+    color: var(--ink); outline: none; -moz-appearance: textfield;
+  }
+  .qty-stepper input::-webkit-inner-spin-button,
+  .qty-stepper input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  /* ---------- Cart panel (right) ---------- */
+  .order-cart {
+    width: 320px; flex: 0 0 320px;
+    border-left: 1px solid var(--rule);
+    display: flex; flex-direction: column;
+    overflow: hidden; background: #fff;
+  }
+  .cart-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 16px 11px; border-bottom: 1px solid var(--rule); flex: 0 0 auto;
+  }
+  .cart-title { display: flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 700; color: var(--ink); }
+  .cart-title svg { width: 16px; height: 16px; }
+  .select-all-btn {
+    font-size: 12px; color: #1A8040; font-weight: 600;
+    background: none; border: none; cursor: pointer; padding: 0; font-family: inherit;
+  }
+  .select-all-btn:hover { text-decoration: underline; }
+  .cart-body { flex: 1; overflow-y: auto; }
+  .cart-group { border-bottom: 1px solid var(--rule); padding: 12px 14px; }
+  .cart-group-head { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .cart-group-check {
+    appearance: none; -webkit-appearance: none;
+    flex: 0 0 15px; width: 15px; height: 15px; margin-top: 2px;
+    border: 1.5px solid #c7c9cf; border-radius: 3px; cursor: pointer;
+    transition: background .1s, border-color .1s;
+  }
+  .cart-group-check:checked {
+    background: var(--nomni-green); border-color: var(--nomni-green);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-size: 9px 9px; background-repeat: no-repeat; background-position: center;
+  }
+  .cart-group-info { flex: 1; min-width: 0; }
+  .cart-group-name { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cart-group-meta { font-size: 11px; color: #1A8040; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .badge-add-on {
+    background: #fff3e0; color: #d07000;
+    font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 3px;
+    letter-spacing: .02em;
+  }
+  .cart-group-amount { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; flex: 0 0 auto; }
+  .cart-items { padding: 0 0 6px 23px; }
+  .cart-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; margin-bottom: 3px; }
+  .cart-item-name { font-size: 12px; color: var(--ink-2); flex: 1; min-width: 0; line-height: 1.3; }
+  .cart-item-qty { font-size: 12px; color: var(--ink-mute); white-space: nowrap; }
+  .cart-view-edit { font-size: 12px; color: #1A8040; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 4px; padding-left: 23px; }
+  .cart-view-edit:hover { text-decoration: underline; }
+
+  /* ---------- Cart footer ---------- */
+  .cart-foot {
+    flex: 0 0 auto; padding: 12px 14px;
+    border-top: 1px solid var(--rule); display: flex; gap: 8px;
+  }
+  .btn-save {
+    padding: 9px 14px; background: #E2FFE6; border: 1px solid #E2FFE6;
+    border-radius: 6px; font: inherit; font-size: 14px; font-weight: 600;
+    color: #0E3727; cursor: pointer; transition: background .12s, color .12s;
+  }
+  .btn-save:hover { background: #c6f2ce; border-color: #c6f2ce; }
+  .btn-place {
+    flex: 1; padding: 9px 10px;
+    background: #d0d2d8; border: 1px solid transparent;
+    border-radius: 6px; font: inherit; font-size: 14px; font-weight: 700;
+    color: #fff; cursor: not-allowed; white-space: nowrap;
+    transition: background .15s, color .15s;
+  }
+  .btn-place.enabled {
+    background: var(--nomni-green); color: var(--seaweed); cursor: pointer;
+  }
+  .btn-place.enabled:hover { background: var(--seaweed); color: var(--nomni-green); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== TOPBAR ===== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="app-switcher">
+        <button class="app-switcher-btn" id="appSwitcherBtn" aria-label="Switch app" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <circle cx="5" cy="5" r="1.8"/><circle cx="12" cy="5" r="1.8"/><circle cx="19" cy="5" r="1.8"/>
+            <circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/>
+            <circle cx="5" cy="19" r="1.8"/><circle cx="12" cy="19" r="1.8"/><circle cx="19" cy="19" r="1.8"/>
+          </svg>
+        </button>
+        <div class="app-switcher-panel" id="appSwitcherPanel" role="menu">
+          <div class="app-grid">
+            <a class="app-item current" href="Buyer Hub - Dashboard.html"><div class="app-tile" style="background:#B05EC0">Pc</div><div class="app-label">Procure</div></a>
+            <a class="app-item" href="Procure - POS.html"><div class="app-tile" style="background:#3F8AFB">Po</div><div class="app-label">POS</div></a>
+          </div>
+          <div class="app-switcher-foot">
+            <span>buyer@restaurant.com</span>
+            <a href="#">View all →</a>
+          </div>
+        </div>
+      </div>
+      <div class="brand">
+        <img class="brand-logo-img" src="assets/nomni-logo-light.svg" alt="nomni" />
+        <div class="brand-sub">Procure</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <a href="#" class="help-btn">
+        <span class="material-symbols-outlined" aria-hidden="true">help</span>
+        Help
+      </a>
+      <div class="user">
+        <div class="avatar" aria-hidden="true">WA</div>
+        <span>William Arya</span>
+        <span class="chev" aria-hidden="true"></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="content">
+
+    <!-- Order top bar -->
+    <div class="order-top">
+      <div class="order-top-left">
+        <a href="Buyer Hub - Orders.html" class="back-btn" aria-label="Back to orders">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </a>
+        <div>
+          <h1 class="create-title">Create order</h1>
+          <button class="outlet-selector-btn">Pedro Restaurant HQ <span class="chev"></span></button>
+        </div>
+      </div>
+      <div class="order-top-right">
+        <div class="search-item-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" placeholder="Search item" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Body split -->
+    <div class="order-body">
+
+      <!-- Left: product list -->
+      <div class="order-main">
+
+        <!-- Filter bar -->
+        <div class="filter-bar">
+          <button class="filter-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+            Filters
+          </button>
+          <button class="filter-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            Bought recently
+          </button>
+          <button class="filter-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Favourites
+          </button>
+          <button class="filter-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            Below par
+          </button>
+          <span class="item-range">1–178 of 178</span>
+        </div>
+
+        <!-- Product table -->
+        <table class="products">
+          <thead>
+            <tr>
+              <th class="col-check"></th>
+              <th class="col-name">Name</th>
+              <th class="col-price">Unit price</th>
+              <th class="col-onhand">On hand</th>
+              <th class="col-par">Par</th>
+              <th class="col-qty">Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- Row 1: Blueberry (Add to order) -->
+            <tr>
+              <td class="col-check"><input type="checkbox" class="row-check" /></td>
+              <td>
+                <div class="prod-code">Buyer product code Mohan</div>
+                <div class="prod-name">
+                  Blueberry Custom Name Mohan
+                  <span class="info-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg></span>
+                </div>
+                <div class="prod-supplier">Good Tiding Pte Ltd (T)</div>
+              </td>
+              <td><div class="price-val">S$4.00</div><div class="price-unit">per pun</div></td>
+              <td><span>3</span> <span class="price-unit">+10</span></td>
+              <td class="muted-val">–</td>
+              <td class="col-qty" id="qty-blueberry">
+                <button class="add-link" data-row="blueberry" data-price="4" data-qty="1">Add to order</button>
+              </td>
+            </tr>
+
+            <!-- Row 2: Cake Boxes (already has stepper) -->
+            <tr>
+              <td class="col-check"><input type="checkbox" class="row-check" checked /></td>
+              <td>
+                <div class="prod-name">
+                  Cake Boxes – Pack of 200
+                  <span class="info-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg></span>
+                </div>
+                <div class="prod-supplier">Paranakan Trading Pte Ltd (T)</div>
+              </td>
+              <td><div class="price-val">S$50.00</div><div class="price-unit">per ctn</div></td>
+              <td>1</td>
+              <td>2.00</td>
+              <td class="col-qty" id="qty-cake-boxes">
+                <div class="qty-stepper">
+                  <button type="button" data-row="cake-boxes" data-action="dec">−</button>
+                  <input type="number" value="1" min="1" data-row="cake-boxes" data-price="50" />
+                  <button type="button" data-row="cake-boxes" data-action="inc">+</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Row 3: Fanta (Add to order) -->
+            <tr>
+              <td class="col-check"><input type="checkbox" class="row-check" /></td>
+              <td>
+                <div class="prod-code">103644</div>
+                <div class="prod-name">
+                  A1 – 10L CDBBN 1x1 Fanta GrpRCMS
+                  <span class="info-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg></span>
+                </div>
+                <div class="prod-supplier">Coca-Cola (T)</div>
+              </td>
+              <td><div class="price-val">S$3.00</div><div class="price-unit">per ea</div></td>
+              <td>664</td>
+              <td class="muted-val">–</td>
+              <td class="col-qty" id="qty-fanta">
+                <button class="add-link" data-row="fanta" data-price="3" data-qty="1">Add to order</button>
+              </td>
+            </tr>
+
+            <!-- Row 4: AAA_901 (Fill to par 123) -->
+            <tr>
+              <td class="col-check"><input type="checkbox" class="row-check" /></td>
+              <td>
+                <div class="prod-code">M_CODE_001 &middot; Goa-BIGzest</div>
+                <div class="prod-name">
+                  AAA_Mohan_001_901
+                  <span class="info-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg></span>
+                </div>
+                <div class="prod-supplier">Test Supplier2</div>
+              </td>
+              <td><div class="price-val">S$200.50</div><div class="price-unit">per bag</div></td>
+              <td>7</td>
+              <td>130.00</td>
+              <td class="col-qty" id="qty-901">
+                <button class="fill-link" data-row="901" data-price="200.50" data-qty="123">Fill to par (123)</button>
+              </td>
+            </tr>
+
+            <!-- Row 5: AAA_902 (Fill to par 13) -->
+            <tr>
+              <td class="col-check"><input type="checkbox" class="row-check" /></td>
+              <td>
+                <div class="prod-code">M_CODE_002 &middot; Goa-BIG</div>
+                <div class="prod-name">
+                  AAA_Mohan_001_902
+                  <span class="info-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg></span>
+                </div>
+                <div class="prod-supplier">Test Supplier2</div>
+              </td>
+              <td><div class="price-val">S$200.00</div><div class="price-unit">per box</div></td>
+              <td>52</td>
+              <td>65.00</td>
+              <td class="col-qty" id="qty-902">
+                <button class="fill-link" data-row="902" data-price="200" data-qty="13">Fill to par (13)</button>
+              </td>
+            </tr>
+
+            <!-- Row 6: AAA_903 (Fill to par 63) -->
+            <tr>
+              <td class="col-check"><input type="checkbox" class="row-check" /></td>
+              <td>
+                <div class="prod-code">M_CODE_003 &middot; Goa-BIG</div>
+                <div class="prod-name">
+                  AAA_Mohan_001_903
+                  <span class="info-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg></span>
+                </div>
+                <div class="prod-supplier">Test Supplier2</div>
+              </td>
+              <td><div class="price-val">S$210.00</div><div class="price-unit">per kg</div></td>
+              <td>2</td>
+              <td>65.00</td>
+              <td class="col-qty" id="qty-903">
+                <button class="fill-link" data-row="903" data-price="210" data-qty="63">Fill to par (63)</button>
+              </td>
+            </tr>
+
+            <!-- Row 7: AAA_904 (Fill to par 126) -->
+            <tr>
+              <td class="col-check"><input type="checkbox" class="row-check" /></td>
+              <td>
+                <div class="prod-code">M_CODE_004 &middot; Goa-BIG</div>
+                <div class="prod-name">
+                  AAA_Mohan_001_904
+                  <span class="info-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg></span>
+                </div>
+                <div class="prod-supplier">Test Supplier2</div>
+              </td>
+              <td><div class="price-val">S$200.00</div><div class="price-unit">per bag</div></td>
+              <td>4</td>
+              <td>130.00</td>
+              <td class="col-qty" id="qty-904">
+                <button class="fill-link" data-row="904" data-price="200" data-qty="126">Fill to par (126)</button>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div><!-- /order-main -->
+
+      <!-- Right: cart panel -->
+      <div class="order-cart">
+        <div class="cart-head">
+          <div class="cart-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span id="cartCount">3</span> items
+          </div>
+          <button class="select-all-btn" id="selectAllBtn">Select all</button>
+        </div>
+
+        <div class="cart-body">
+
+          <!-- Group 1: GMP Packaging -->
+          <div class="cart-group">
+            <div class="cart-group-head">
+              <input type="checkbox" class="cart-group-check" data-amount="194.02" id="check-gmp" />
+              <div class="cart-group-info">
+                <div class="cart-group-name">GMP Packaging(T1)</div>
+                <div class="cart-group-meta">
+                  Thu, 23 Apr 2026
+                  <span class="badge-add-on">Add on Order</span>
+                </div>
+              </div>
+              <div class="cart-group-amount">S$194.02</div>
+            </div>
+            <div class="cart-items">
+              <div class="cart-item">
+                <div class="cart-item-name">BOPP Env Bag 80mmX110mm with Tape (Approx 90pcs/pkt)</div>
+                <div class="cart-item-qty">1 bdl</div>
+              </div>
+              <div class="cart-item">
+                <div class="cart-item-name">Banana custom</div>
+                <div class="cart-item-qty">4 bag</div>
+              </div>
+            </div>
+            <a href="#" class="cart-view-edit">View/edit</a>
+          </div>
+
+          <!-- Group 2: Paranakan Trading -->
+          <div class="cart-group">
+            <div class="cart-group-head">
+              <input type="checkbox" class="cart-group-check" data-amount="54.50" id="check-paranakan" />
+              <div class="cart-group-info">
+                <div class="cart-group-name">Paranakan Trading Pte Ltd (T)</div>
+                <div class="cart-group-meta">Thu, 23 Apr 2026</div>
+              </div>
+              <div class="cart-group-amount">S$54.50</div>
+            </div>
+            <div class="cart-items">
+              <div class="cart-item">
+                <div class="cart-item-name">Cake Boxes – Pack of 200</div>
+                <div class="cart-item-qty" id="paranakan-cake-qty">1 ctn</div>
+              </div>
+            </div>
+            <a href="#" class="cart-view-edit">View/edit</a>
+          </div>
+
+        </div><!-- /cart-body -->
+
+        <div class="cart-foot">
+          <button class="btn-save">Save</button>
+          <button class="btn-place" id="placeOrderBtn">Place order</button>
+        </div>
+      </div><!-- /order-cart -->
+
+    </div><!-- /order-body -->
+  </div><!-- /content -->
+
+</div><!-- /app -->
+
+<script>
+  /* App switcher */
+  (function(){
+    var btn = document.getElementById('appSwitcherBtn');
+    var panel = document.getElementById('appSwitcherPanel');
+    if (!btn || !panel) return;
+    function close(){ panel.classList.remove('open'); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+    function toggle(e){
+      e.stopPropagation();
+      var isOpen = panel.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+    btn.addEventListener('click', toggle);
+    document.addEventListener('click', function(e){ if (!panel.contains(e.target) && e.target !== btn) close(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+  })();
+
+  /* Cart checkboxes + Select all + Place order */
+  (function(){
+    var selectAllBtn = document.getElementById('selectAllBtn');
+    var placeBtn = document.getElementById('placeOrderBtn');
+    var allChecked = false;
+
+    function updatePlaceOrder() {
+      var checks = document.querySelectorAll('.cart-group-check');
+      var total = 0;
+      var anyChecked = false;
+      checks.forEach(function(c) {
+        if (c.checked) {
+          total += parseFloat(c.dataset.amount);
+          anyChecked = true;
+        }
+      });
+      if (anyChecked) {
+        placeBtn.classList.add('enabled');
+        placeBtn.textContent = 'Place order (S$' + total.toFixed(2) + ')';
+      } else {
+        placeBtn.classList.remove('enabled');
+        placeBtn.textContent = 'Place order';
+      }
+      var allNowChecked = Array.from(checks).every(function(c){ return c.checked; });
+      selectAllBtn.textContent = allNowChecked ? 'Deselect all' : 'Select all';
+    }
+
+    document.querySelectorAll('.cart-group-check').forEach(function(c){
+      c.addEventListener('change', updatePlaceOrder);
+    });
+
+    selectAllBtn.addEventListener('click', function(){
+      var checks = document.querySelectorAll('.cart-group-check');
+      var shouldCheck = !Array.from(checks).every(function(c){ return c.checked; });
+      checks.forEach(function(c){ c.checked = shouldCheck; });
+      updatePlaceOrder();
+    });
+  })();
+
+  /* Add to order / Fill to par → stepper */
+  (function(){
+    function makeStepperHTML(qty) {
+      return '<div class="qty-stepper">'
+        + '<button type="button" data-action="dec">−</button>'
+        + '<input type="number" value="' + qty + '" min="1" />'
+        + '<button type="button" data-action="inc">+</button>'
+        + '</div>';
+    }
+
+    function attachStepperEvents(cell) {
+      var input = cell.querySelector('input');
+      cell.querySelector('[data-action="dec"]').addEventListener('click', function(){
+        var v = parseInt(input.value, 10);
+        if (v > 1) { input.value = v - 1; }
+      });
+      cell.querySelector('[data-action="inc"]').addEventListener('click', function(){
+        input.value = parseInt(input.value, 10) + 1;
+      });
+      input.addEventListener('change', function(){
+        var v = parseInt(this.value, 10);
+        if (isNaN(v) || v < 1) this.value = 1;
+      });
+    }
+
+    /* Attach to already-rendered Cake Boxes stepper */
+    attachStepperEvents(document.getElementById('qty-cake-boxes'));
+
+    /* Add to order */
+    document.querySelectorAll('.add-link').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var cell = this.parentElement;
+        var qty = parseInt(this.dataset.qty, 10) || 1;
+        cell.innerHTML = makeStepperHTML(qty);
+        attachStepperEvents(cell);
+      });
+    });
+
+    /* Fill to par */
+    document.querySelectorAll('.fill-link').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var cell = this.parentElement;
+        var qty = parseInt(this.dataset.qty, 10) || 1;
+        cell.innerHTML = makeStepperHTML(qty);
+        attachStepperEvents(cell);
+      });
+    });
+  })();
+</script>
+</body>
+</html>
