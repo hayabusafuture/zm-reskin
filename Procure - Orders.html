@@ -819,8 +819,8 @@
         </button>
         <div class="app-switcher-panel" id="appSwitcherPanel" role="menu">
           <div class="app-grid">
-            <a class="app-item current" href="Buyer Hub - Dashboard.html"><div class="app-tile" style="background:#B05EC0">Pc</div><div class="app-label">Procure</div></a>
-            <a class="app-item" href="Procure - POS.html"><div class="app-tile" style="background:#3F8AFB">Po</div><div class="app-label">POS</div></a>
+            <a class="app-item current" href="Procure - Dashboard.html"><div class="app-tile" style="background:#B05EC0">Pc</div><div class="app-label">Procure</div></a>
+            <a class="app-item" href="POS - Dashboard.html"><div class="app-tile" style="background:#3F8AFB">Po</div><div class="app-label">POS</div></a>
           </div>
           <div class="app-switcher-foot">
             <span>buyer@restaurant.com</span>
@@ -850,7 +850,7 @@
   <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar">
     <nav class="nav" aria-label="Primary">
-      <a href="Buyer Hub - Dashboard.html"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Dashboard</a>
+      <a href="Procure - Dashboard.html"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Dashboard</a>
       <a href="#"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V6m5 14V10m5 10V4m5 16v-8"/></svg>Reports</a>
       <a href="#" class="active"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="1.5"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Orders</a>
       <a href="#"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 13h6M9 17h4"/></svg>Invoices</a>
@@ -884,7 +884,7 @@
           <button class="btn btn-primary split-btn-caret" id="newOrderCaret" aria-label="More order types"><span class="chev" aria-hidden="true"></span></button>
           <div class="split-dropdown" id="newOrderDropdown">
             <a href="#" id="orderBySupplierLink">Order by supplier</a>
-            <a href="Buyer Hub - New Order - Item.html">Order by item</a>
+            <a href="Procure - New Order - Item.html">Order by item</a>
             <a href="#">New recurring order</a>
             <a href="#">New weekly order</a>
           </div>
@@ -1026,7 +1026,7 @@
   // Row click → detail page
   document.getElementById("rows").addEventListener("click", function(e) {
     var row = e.target.closest("tr");
-    if (row) window.location.href = "Buyer Hub - Order Detail.html";
+    if (row) window.location.href = "Procure - Order Detail.html";
   });
   document.getElementById("rows").style.cursor = "pointer";
 </script>
@@ -1043,7 +1043,7 @@
       <input type="text" class="modal-search" placeholder="Search suppliers" />
     </div>
     <div class="modal-supplier-list">
-      <a href="Buyer Hub - New Order - Supplier.html" class="modal-supplier-item">
+      <a href="Procure - New Order - Supplier.html" class="modal-supplier-item">
         <div class="modal-supplier-avatar">PT</div>
         <div class="modal-supplier-info">
           <div class="modal-supplier-name">Paranakan Trading Pte Ltd (T)</div>
