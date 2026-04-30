@@ -163,7 +163,7 @@
   .nav a:hover { background: rgba(0,0,0,.05); color: #111; }
   .nav a:hover .icon { color: #888; }
   .nav a.active { background: var(--sidebar-item-active); color: var(--seaweed); font-weight: 600; }
-  .nav a.active .icon { color: var(--nomni-green); }
+  .nav a.active .icon { color: var(--spinach); }
   .nav .badge {
     margin-left: auto; background: var(--nomni-green); color: var(--seaweed);
     font-size: 10px; font-weight: 700; min-width: 18px; height: 18px;
@@ -273,7 +273,7 @@
     margin-bottom: 20px; gap: 16px;
   }
   .dash-section-left { display: flex; align-items: center; gap: 12px; }
-  .dash-section-title { font-size: 23px; font-weight: 600; color: var(--ink); margin: 0; letter-spacing: -0.02em; }
+  .dash-section-title { font-size: 21px; font-weight: 600; color: var(--ink); margin: 0; letter-spacing: -0.02em; }
 
   /* outlet select */
   .outlet-select {
@@ -312,8 +312,8 @@
   .spend-meta {
     display: flex; gap: 32px; margin-bottom: 20px;
   }
-  .spend-meta-item .spend-meta-label { font-size: 17px; color: var(--ink-mute); margin-bottom: 3px; }
-  .spend-meta-item .spend-meta-val { font-size: 23px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .spend-meta-item .spend-meta-label { font-size: 14px; color: var(--ink-mute); margin-bottom: 3px; }
+  .spend-meta-item .spend-meta-val { font-size: 21px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
 
   /* bar chart */
   .chart-wrap {
@@ -394,6 +394,24 @@
     text-align: center; color: var(--ink-mute); font-size: 14px;
   }
   .empty-state svg { display: block; margin: 0 auto 12px; color: #c7c9cf; }
+  /* Font inspector */
+  .font-inspector-btn {
+    background: transparent; border: 1px solid rgba(255,255,255,.25);
+    color: rgba(255,255,255,.6); cursor: pointer;
+    display: inline-flex; align-items: center;
+    padding: 3px 8px; border-radius: 6px;
+    transition: background .15s, color .15s, border-color .15s;
+    font-size: 11px; font-weight: 700; font-family: monospace; letter-spacing: .03em;
+  }
+  .font-inspector-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+  .font-inspector-btn.active { background: rgba(255,255,255,.18); color: #fff; border-color: rgba(255,255,255,.5); }
+  #font-inspector-tip {
+    position: fixed; background: #1a1f2b; color: #fff;
+    font-size: 11px; font-weight: 600; font-family: monospace;
+    padding: 3px 8px; border-radius: 4px; pointer-events: none;
+    z-index: 99999; display: none; white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3); letter-spacing: .02em;
+  }
 </style>
 </head>
 <body>
@@ -427,6 +445,7 @@
       </div>
     </div>
     <div class="topbar-right">
+      <button class="font-inspector-btn" id="fontInspectorBtn" title="Font size inspector">Aa</button>
       <a href="#" class="help-btn">
         <span class="material-symbols-outlined" aria-hidden="true">help</span>
         Help
@@ -692,6 +711,51 @@
       xaxis.appendChild(xl);
     });
   })();
+</script>
+<div id="font-inspector-tip"></div>
+<script>
+(function(){
+  var btn = document.getElementById('fontInspectorBtn');
+  var tip = document.getElementById('font-inspector-tip');
+  var on = false;
+  var tokenMap = {
+    '10px': '--text-badge', '11px': '--text-xs', '12px': '--text-sm',
+    '14px': '--text-base',  '21px': '--text-heading', '24px': '--text-display'
+  };
+  var colorMap = {
+    'rgb(26, 31, 43)':   '--ink',
+    'rgb(138, 143, 152)':'--ink-mute',
+    'rgb(199, 201, 207)':'--ink-soft',
+    'rgb(26, 128, 64)':  '--spinach',
+    'rgb(42, 200, 100)': '--nomni-green',
+    'rgb(14, 55, 39)':   '--seaweed',
+    'rgb(17, 17, 17)':   '--sidebar-text',
+    'rgb(255, 255, 255)':'white'
+  };
+  btn.addEventListener('click', function(){
+    on = !on;
+    btn.classList.toggle('active', on);
+    document.body.style.cursor = on ? 'crosshair' : '';
+    tip.style.display = 'none';
+  });
+  document.addEventListener('mousemove', function(e){
+    if (!on) return;
+    tip.style.left = (e.clientX + 14) + 'px';
+    tip.style.top = (e.clientY + 14) + 'px';
+  });
+  document.addEventListener('mouseover', function(e){
+    if (!on) return;
+    var s = window.getComputedStyle(e.target);
+    var fs = s.fontSize;
+    var fw = s.fontWeight;
+    var col = s.color;
+    var fsLabel = tokenMap[fs] ? fs + ' · ' + tokenMap[fs] : fs;
+    var colLabel = colorMap[col] || col;
+    tip.textContent = fsLabel + ' · ' + fw + ' · ' + colLabel;
+    tip.style.display = 'block';
+  });
+  document.addEventListener('mouseleave', function(){ tip.style.display = 'none'; });
+})();
 </script>
 </body>
 </html>

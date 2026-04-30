@@ -24,7 +24,7 @@
   html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
   body {
     font-family: "Inter", system-ui, -apple-system, sans-serif;
-    color: var(--ink); font-size: 15px; line-height: 1.4;
+    color: var(--ink); font-size: 14px; line-height: 1.4;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -126,13 +126,13 @@
   }
   .back-btn:hover { background: #f3f4f6; border-color: #c0c2c8; }
   .back-btn svg { width: 15px; height: 15px; }
-  .create-title { font-size: 19px; font-weight: 700; color: var(--ink); margin: 0 0 3px; letter-spacing: -.01em; }
+  .create-title { font-size: 21px; font-weight: 700; color: var(--ink); margin: 0 0 3px; letter-spacing: -.01em; }
   .outlet-selector-btn {
     background: none; border: none; cursor: pointer; font: inherit; font-size: 14px;
-    font-weight: 600; color: var(--nomni-green); padding: 0;
+    font-weight: 600; color: var(--spinach); padding: 0;
     display: inline-flex; align-items: center; gap: 4px;
   }
-  .outlet-selector-btn .chev { width: 7px; height: 7px; border-width: 1.5px; color: var(--nomni-green); }
+  .outlet-selector-btn .chev { width: 7px; height: 7px; border-width: 1.5px; color: var(--spinach); }
   .order-top-right {}
   .search-item-wrap {
     display: flex; align-items: center; gap: 8px;
@@ -198,11 +198,11 @@
     background-size: 9px 9px; background-repeat: no-repeat; background-position: center;
   }
   .prod-code { font-size: 11px; color: var(--ink-mute); margin-bottom: 1px; }
-  .prod-name { font-weight: 600; font-size: 15px; color: var(--ink); display: flex; align-items: center; gap: 5px; }
+  .prod-name { font-weight: 600; font-size: 14px; color: var(--ink); display: flex; align-items: center; gap: 5px; }
   .prod-supplier { font-size: 12px; color: var(--ink-mute); margin-top: 1px; }
   .info-icon { color: var(--ink-mute); flex: 0 0 auto; cursor: pointer; display: inline-flex; }
   .info-icon:hover { color: var(--ink-2); }
-  .price-val { font-weight: 600; font-size: 15px; }
+  .price-val { font-weight: 600; font-size: 14px; }
   .price-unit { font-size: 11px; color: var(--ink-mute); }
   .muted-val { color: var(--ink-mute); }
   .add-link { color: #1A8040; font-weight: 600; text-decoration: none; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
@@ -212,14 +212,14 @@
   .qty-stepper { display: inline-flex; align-items: center; border: 1px solid #d0d2d8; border-radius: 5px; overflow: hidden; }
   .qty-stepper button {
     width: 26px; height: 26px; background: #f3f4f6; border: none; cursor: pointer;
-    font-size: 15px; line-height: 1; color: var(--ink-2); display: flex; align-items: center;
+    font-size: 14px; line-height: 1; color: var(--ink-2); display: flex; align-items: center;
     justify-content: center; transition: background .12s; font-family: inherit;
   }
   .qty-stepper button:hover { background: #e6e8ec; }
   .qty-stepper input {
     width: 36px; height: 26px; border: none;
     border-left: 1px solid #d0d2d8; border-right: 1px solid #d0d2d8;
-    text-align: center; font: inherit; font-size: 15px; font-weight: 600;
+    text-align: center; font: inherit; font-size: 14px; font-weight: 600;
     color: var(--ink); outline: none; -moz-appearance: textfield;
   }
   .qty-stepper input::-webkit-inner-spin-button,
@@ -295,6 +295,24 @@
     background: var(--nomni-green); color: var(--seaweed); cursor: pointer;
   }
   .btn-place.enabled:hover { background: var(--seaweed); color: var(--nomni-green); }
+  /* Font inspector */
+  .font-inspector-btn {
+    background: transparent; border: 1px solid rgba(255,255,255,.25);
+    color: rgba(255,255,255,.6); cursor: pointer;
+    display: inline-flex; align-items: center;
+    padding: 3px 8px; border-radius: 6px;
+    transition: background .15s, color .15s, border-color .15s;
+    font-size: 11px; font-weight: 700; font-family: monospace; letter-spacing: .03em;
+  }
+  .font-inspector-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+  .font-inspector-btn.active { background: rgba(255,255,255,.18); color: #fff; border-color: rgba(255,255,255,.5); }
+  #font-inspector-tip {
+    position: fixed; background: #1a1f2b; color: #fff;
+    font-size: 11px; font-weight: 600; font-family: monospace;
+    padding: 3px 8px; border-radius: 4px; pointer-events: none;
+    z-index: 99999; display: none; white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3); letter-spacing: .02em;
+  }
 </style>
 </head>
 <body>
@@ -328,6 +346,7 @@
       </div>
     </div>
     <div class="topbar-right">
+      <button class="font-inspector-btn" id="fontInspectorBtn" title="Font size inspector">Aa</button>
       <a href="#" class="help-btn">
         <span class="material-symbols-outlined" aria-hidden="true">help</span>
         Help
@@ -723,6 +742,51 @@
       });
     });
   })();
+</script>
+<div id="font-inspector-tip"></div>
+<script>
+(function(){
+  var btn = document.getElementById('fontInspectorBtn');
+  var tip = document.getElementById('font-inspector-tip');
+  var on = false;
+  var tokenMap = {
+    '10px': '--text-badge', '11px': '--text-xs', '12px': '--text-sm',
+    '14px': '--text-base',  '21px': '--text-heading', '24px': '--text-display'
+  };
+  var colorMap = {
+    'rgb(26, 31, 43)':   '--ink',
+    'rgb(138, 143, 152)':'--ink-mute',
+    'rgb(199, 201, 207)':'--ink-soft',
+    'rgb(26, 128, 64)':  '--spinach',
+    'rgb(42, 200, 100)': '--nomni-green',
+    'rgb(14, 55, 39)':   '--seaweed',
+    'rgb(17, 17, 17)':   '--sidebar-text',
+    'rgb(255, 255, 255)':'white'
+  };
+  btn.addEventListener('click', function(){
+    on = !on;
+    btn.classList.toggle('active', on);
+    document.body.style.cursor = on ? 'crosshair' : '';
+    tip.style.display = 'none';
+  });
+  document.addEventListener('mousemove', function(e){
+    if (!on) return;
+    tip.style.left = (e.clientX + 14) + 'px';
+    tip.style.top = (e.clientY + 14) + 'px';
+  });
+  document.addEventListener('mouseover', function(e){
+    if (!on) return;
+    var s = window.getComputedStyle(e.target);
+    var fs = s.fontSize;
+    var fw = s.fontWeight;
+    var col = s.color;
+    var fsLabel = tokenMap[fs] ? fs + ' · ' + tokenMap[fs] : fs;
+    var colLabel = colorMap[col] || col;
+    tip.textContent = fsLabel + ' · ' + fw + ' · ' + colLabel;
+    tip.style.display = 'block';
+  });
+  document.addEventListener('mouseleave', function(){ tip.style.display = 'none'; });
+})();
 </script>
 </body>
 </html>
