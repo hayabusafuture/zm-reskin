@@ -95,6 +95,18 @@
     padding-bottom: 8px;
     margin-bottom: 24px;
   }
+  .section-title a {
+    color: inherit; text-decoration: none;
+  }
+  .section-title a::after {
+    content: ' #';
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-soft);
+    opacity: 0;
+    transition: opacity .15s;
+  }
+  .section-title a:hover::after { opacity: 1; }
 
   /* ---- Print button ---- */
   .print-btn {
@@ -638,8 +650,8 @@
   </div>
 
   <!-- ── BRAND COLOURS ── -->
-  <div class="section">
-    <div class="section-title">Brand Colours</div>
+  <div class="section" id="brand-colours">
+    <div class="section-title"><a href="#brand-colours">Brand Colours</a></div>
     <div style="margin-bottom:14px;font-size:12px;color:var(--ink-mute)">Core palette — use these tokens consistently across all platforms.</div>
     <div class="swatch-grid">
       <div class="swatch">
@@ -747,8 +759,8 @@
   </div>
 
   <!-- ── TYPOGRAPHY ── -->
-  <div class="section">
-    <div class="section-title">Typography</div>
+  <div class="section" id="typography">
+    <div class="section-title"><a href="#typography">Typography</a></div>
 
     <div class="font-stack" style="margin-bottom:24px">
       <div class="font-card">
@@ -803,8 +815,8 @@
   </div>
 
   <!-- ── BUTTONS ── -->
-  <div class="section">
-    <div class="section-title">Buttons</div>
+  <div class="section" id="buttons">
+    <div class="section-title"><a href="#buttons">Buttons</a></div>
     <div style="font-size:12px;color:var(--ink-mute);margin-bottom:20px">All buttons use <span class="code-tag">font-size: 14px</span> · <span class="code-tag">font-weight: 600</span> · <span class="code-tag">border-radius: 6px</span> · <span class="code-tag">padding: 10px 16px</span></div>
 
     <div class="btn-grid">
@@ -868,8 +880,8 @@
   </div>
 
   <!-- ── STATUS CHIPS ── -->
-  <div class="section">
-    <div class="section-title">Status Chips</div>
+  <div class="section" id="status-chips">
+    <div class="section-title"><a href="#status-chips">Status Chips</a></div>
     <div class="chip-demo" style="margin-bottom:16px">
       <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">
         <span class="chip chip--placed">PLACED</span>
@@ -902,8 +914,8 @@
   </div>
 
   <!-- ── TABS ── -->
-  <div class="section">
-    <div class="section-title">Tabs</div>
+  <div class="section" id="tabs">
+    <div class="section-title"><a href="#tabs">Tabs</a></div>
     <div class="tabs-demo" style="margin-bottom:12px">
       <div class="tab active">Items</div>
       <div class="tab">History</div>
@@ -916,8 +928,8 @@
   </div>
 
   <!-- ── NAVIGATION ── -->
-  <div class="section">
-    <div class="section-title">Navigation — Sidebar Items</div>
+  <div class="section" id="navigation">
+    <div class="section-title"><a href="#navigation">Navigation — Sidebar Items</a></div>
     <div class="two-col" style="align-items:flex-start">
 
       <!-- Flat nav (Nomni Procure) -->
@@ -986,8 +998,8 @@
   </div>
 
   <!-- ── INPUTS ── -->
-  <div class="section">
-    <div class="section-title">Form Inputs</div>
+  <div class="section" id="form-inputs">
+    <div class="section-title"><a href="#form-inputs">Form Inputs</a></div>
     <div class="input-row" style="margin-bottom:16px">
       <div class="field-wrap">
         <div class="field-label">Default</div>
@@ -1018,8 +1030,8 @@
   </div>
 
   <!-- ── BADGES ── -->
-  <div class="section">
-    <div class="section-title">Badges</div>
+  <div class="section" id="badges">
+    <div class="section-title"><a href="#badges">Badges</a></div>
     <div class="badge-demo">
       <div class="badge-item">
         <span class="badge">3</span>
@@ -1036,8 +1048,8 @@
   </div>
 
   <!-- ── TOPBAR ── -->
-  <div class="section">
-    <div class="section-title">Topbar</div>
+  <div class="section" id="topbar">
+    <div class="section-title"><a href="#topbar">Topbar</a></div>
 
     <!-- Example: Nomni Procure -->
     <div style="font-size:11px;font-weight:600;color:var(--ink-2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">Nomni Procure</div>
@@ -1092,8 +1104,8 @@
   </div>
 
   <!-- ── BANNERS ── -->
-  <div class="section">
-    <div class="section-title">Banners &amp; Notices</div>
+  <div class="section" id="banners">
+    <div class="section-title"><a href="#banners">Banners &amp; Notices</a></div>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div>
         <div class="banner">
@@ -1106,8 +1118,8 @@
   </div>
 
   <!-- ── TABLES ── -->
-  <div class="section">
-    <div class="section-title">Tables</div>
+  <div class="section" id="tables">
+    <div class="section-title"><a href="#tables">Tables</a></div>
     <div style="display:flex;flex-direction:column;gap:32px">
 
       <!-- Variation 1: Standard -->
