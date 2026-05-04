@@ -37,7 +37,7 @@
     --status-placed-bg:     #1fbf5f;
     --status-placed-soft:   #d9f5e4;
     --status-rejected-bg:   #fdd6dc;
-    --status-rejected-ink:  #b02a4a;
+    --status-rejected-ink:  #d0291e;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -316,8 +316,7 @@
     text-transform: uppercase;
     line-height: 1.4;
   }
-  .chip--placed   { background: var(--status-placed-bg);    color: #fff; }
-  .chip--placed-soft { background: var(--status-placed-soft); color: var(--spinach); }
+  .chip--placed   { background: var(--status-placed-soft);  color: var(--spinach); }
   .chip--rejected { background: var(--status-rejected-bg);  color: var(--status-rejected-ink); }
   .chip--cancelled{ background: var(--status-rejected-bg);  color: var(--status-rejected-ink); }
   .chip--draft    { background: #f0f0f2;                     color: #555; }
@@ -723,6 +722,26 @@
       </div>
     </div>
 
+    <div style="margin-top:20px;margin-bottom:14px;font-size:12px;color:var(--ink-mute)">Status / Semantic</div>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#d0291e"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Error Red</div>
+          <div class="swatch-hex">#D0291E</div>
+          <div class="swatch-var">Validation errors</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#F5B731"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Amber</div>
+          <div class="swatch-hex">#F5B731</div>
+          <div class="swatch-var">Success / confirmation</div>
+        </div>
+      </div>
+    </div>
+
     <div style="margin-top:20px;margin-bottom:14px;font-size:12px;color:var(--ink-mute)">Text scale</div>
     <div style="display:flex;gap:12px;flex-wrap:wrap">
       <div style="background:#fff;border:1px solid var(--rule);border-radius:8px;padding:12px 16px;flex:1;min-width:120px">
@@ -885,27 +904,28 @@
     <div class="chip-demo" style="margin-bottom:16px">
       <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">
         <span class="chip chip--placed">PLACED</span>
-        <div class="label-below">Placed — solid green</div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">
-        <span class="chip chip--placed-soft">PLACED</span>
-        <div class="label-below">Placed — soft variant</div>
+        <div class="label-below">Placed</div>
+        <div style="font-size:10px;color:var(--ink-mute);font-family:monospace">bg #d9f5e4 · ink #1A8040</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">
         <span class="chip chip--rejected">REJECTED</span>
         <div class="label-below">Rejected</div>
+        <div style="font-size:10px;color:var(--ink-mute);font-family:monospace">bg #fdd6dc · ink #D0291E</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">
         <span class="chip chip--cancelled">CANCELLED</span>
         <div class="label-below">Cancelled</div>
+        <div style="font-size:10px;color:var(--ink-mute);font-family:monospace">bg #fdd6dc · ink #D0291E</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">
         <span class="chip chip--draft">DRAFT</span>
         <div class="label-below">Draft</div>
+        <div style="font-size:10px;color:var(--ink-mute);font-family:monospace">bg #f0f0f2 · ink #555555</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">
         <span class="chip chip--pending">PENDING</span>
         <div class="label-below">Pending / Warning</div>
+        <div style="font-size:10px;color:var(--ink-mute);font-family:monospace">bg #fff3cd · ink #7a5f00</div>
       </div>
     </div>
     <div style="font-size:11px;color:var(--ink-mute);line-height:1.7">
@@ -1142,21 +1162,21 @@
                 <td style="padding:14px 12px;border-bottom:1px solid var(--rule);color:var(--ink);background:#fff">Good Tiding Pte Ltd</td>
                 <td style="padding:14px 12px;border-bottom:1px solid var(--rule);color:var(--ink-mute);background:#fff">Test Outlet ZM</td>
                 <td style="padding:14px 12px;border-bottom:1px solid var(--rule);color:var(--ink);background:#fff">S$16.35</td>
-                <td style="padding:14px 12px;border-bottom:1px solid var(--rule);background:#fff"><span style="background:#1fbf5f;color:#fff;font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;padding:3px 10px;border-radius:4px">Placed</span></td>
+                <td style="padding:14px 12px;border-bottom:1px solid var(--rule);background:#fff"><span style="background:#d9f5e4;color:#1A8040;font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;padding:3px 10px;border-radius:4px">Placed</span></td>
               </tr>
               <tr>
                 <td style="padding:14px 12px;border-bottom:1px solid var(--rule);color:var(--ink);background:#fff">29/04/2026</td>
                 <td style="padding:14px 12px;border-bottom:1px solid var(--rule);color:var(--ink);background:#fff">GMP Packaging (T1)</td>
                 <td style="padding:14px 12px;border-bottom:1px solid var(--rule);color:var(--ink-mute);background:#fff">Test Outlet ZM</td>
                 <td style="padding:14px 12px;border-bottom:1px solid var(--rule);color:var(--ink);background:#fff">S$53.41</td>
-                <td style="padding:14px 12px;border-bottom:1px solid var(--rule);background:#fff"><span style="background:#fdd6dc;color:#b02a4a;font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;padding:3px 10px;border-radius:4px">Rejected</span></td>
+                <td style="padding:14px 12px;border-bottom:1px solid var(--rule);background:#fff"><span style="background:#fdd6dc;color:#d0291e;font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;padding:3px 10px;border-radius:4px">Rejected</span></td>
               </tr>
               <tr>
                 <td style="padding:14px 12px;color:var(--ink);background:#fff">21/04/2026</td>
                 <td style="padding:14px 12px;color:var(--ink);background:#fff">Coca-Cola (T)</td>
                 <td style="padding:14px 12px;color:var(--ink-mute);background:#fff">Test Outlet ZM</td>
                 <td style="padding:14px 12px;color:var(--ink);background:#fff">S$598.41</td>
-                <td style="padding:14px 12px;background:#fff"><span style="background:#fdd6dc;color:#b02a4a;font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;padding:3px 10px;border-radius:4px">Cancelled</span></td>
+                <td style="padding:14px 12px;background:#fff"><span style="background:#fdd6dc;color:#d0291e;font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;padding:3px 10px;border-radius:4px">Cancelled</span></td>
               </tr>
             </tbody>
           </table>
