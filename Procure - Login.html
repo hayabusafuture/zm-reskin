@@ -17,6 +17,7 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
+      height: 100dvh;
       overflow: hidden;
     }
 
@@ -241,6 +242,11 @@
 
   @media (max-width: 768px) {
     .image-panel { display: none; }
+  }
+
+  @media (orientation: landscape) and (max-height: 900px) {
+    .banner { padding: 8px 20px; }
+    .login-panel { padding: 32px 50px; }
   }
 
   /* Font inspector */
