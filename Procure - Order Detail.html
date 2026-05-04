@@ -172,7 +172,10 @@
     font-size: 14px; font-weight: 400; position: relative;
     transition: background-color .15s ease, color .15s ease;
   }
-  .nav a .icon { font-size: 18px; color: #888888; flex: 0 0 auto; line-height: 1; transition: color .15s ease; }
+  .nav a .icon { width: 18px; height: 18px; font-size: 18px; color: #888888; flex: 0 0 auto; line-height: 1; transition: color .15s ease; }
+  .nav a .icon-green { display: none; }
+  .nav a.active .icon-grey { display: none; }
+  .nav a.active .icon-green { display: block; }
   .nav a:hover { background: rgba(0,0,0,.05); color: var(--ink); }
   .nav a:hover .icon { color: #888; }
   .nav a.active { background: var(--sidebar-item-active); color: var(--seaweed); font-weight: 600; }
@@ -550,12 +553,12 @@
   <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar">
     <nav class="nav" aria-label="Primary">
-      <a href="Procure - Dashboard.html"><span class="material-symbols-outlined icon">dashboard</span>Dashboard</a>
-      <a href="#"><span class="material-symbols-outlined icon">bar_chart</span>Reports</a>
-      <a href="Procure - Orders.html" class="active"><span class="material-symbols-outlined icon">receipt_long</span>Orders</a>
-      <a href="#"><span class="material-symbols-outlined icon">description</span>Invoices</a>
-      <a href="#"><span class="material-symbols-outlined icon">credit_card</span>Payments</a>
-      <a href="#"><span class="material-symbols-outlined icon">layers</span>Items</a>
+      <a href="Procure - Dashboard.html"><img class="icon icon-grey" src="sidenav icons/Dashboard - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Dashboard - green.svg" alt="" aria-hidden="true">Dashboard</a>
+      <a href="#"><img class="icon icon-grey" src="sidenav icons/Reports - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Reports - green.svg" alt="" aria-hidden="true">Reports</a>
+      <a href="Procure - Orders.html" class="active"><img class="icon icon-grey" src="sidenav icons/Orders - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Orders - green.svg" alt="" aria-hidden="true">Orders</a>
+      <a href="#"><img class="icon icon-grey" src="sidenav icons/Invoice - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Invoice - green.svg" alt="" aria-hidden="true">Invoices</a>
+      <a href="#"><img class="icon icon-grey" src="sidenav icons/Payments - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Payments - green.svg" alt="" aria-hidden="true">Payments</a>
+      <a href="#"><img class="icon icon-grey" src="sidenav icons/Items - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Items - green.svg" alt="" aria-hidden="true">Items</a>
       <a href="#"><span class="material-symbols-outlined icon">inventory_2</span>Inventory</a>
       <a href="#"><span class="material-symbols-outlined icon">menu_book</span>Recipes</a>
       <a href="#"><span class="material-symbols-outlined icon">storefront</span>Outlets<span class="warn-icon"><img src="error_24dp_1F1F1F 1.png" width="20" height="20" alt=""></span></a>

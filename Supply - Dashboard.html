@@ -159,7 +159,10 @@
     font-size: 14px; font-weight: 400;
     transition: background-color .15s ease, color .15s ease;
   }
-  .nav a .icon { font-size: 18px; color: #888888; flex: 0 0 auto; line-height: 1; transition: color .15s ease; }
+  .nav a .icon { width: 18px; height: 18px; font-size: 18px; color: #888888; flex: 0 0 auto; line-height: 1; transition: color .15s ease; }
+  .nav a .icon-green { display: none; }
+  .nav a.active .icon-grey { display: none; }
+  .nav a.active .icon-green { display: block; }
   .nav a:hover { background: rgba(0,0,0,.05); color: var(--ink); }
   .nav a:hover .icon { color: #888; }
   .nav a.active { background: var(--sidebar-item-active); color: var(--seaweed); font-weight: 600; }
@@ -525,14 +528,14 @@
   <!-- ── Sidebar ── -->
   <aside class="sidebar">
     <nav class="nav" aria-label="Primary">
-      <a href="Supply - Dashboard.html" class="active"><span class="material-symbols-outlined icon">dashboard</span>Dashboard</a>
-      <a href="#"><span class="material-symbols-outlined icon">receipt_long</span>Orders</a>
-      <a href="#"><span class="material-symbols-outlined icon">receipt</span>Invoices</a>
-      <a href="#"><span class="material-symbols-outlined icon">payments</span>Payments</a>
+      <a href="Supply - Dashboard.html" class="active"><img class="icon icon-grey" src="sidenav icons/Dashboard - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Dashboard - green.svg" alt="" aria-hidden="true">Dashboard</a>
+      <a href="#"><img class="icon icon-grey" src="sidenav icons/Orders - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Orders - green.svg" alt="" aria-hidden="true">Orders</a>
+      <a href="#"><img class="icon icon-grey" src="sidenav icons/Invoice - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Invoice - green.svg" alt="" aria-hidden="true">Invoices</a>
+      <a href="#"><img class="icon icon-grey" src="sidenav icons/Payments - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Payments - green.svg" alt="" aria-hidden="true">Payments</a>
       <a href="#"><span class="material-symbols-outlined icon">groups</span>Customers</a>
       <a href="#"><span class="material-symbols-outlined icon">warehouse</span>Inventory</a>
       <a href="#"><span class="material-symbols-outlined icon">grid_view</span>Catalogue</a>
-      <a href="#"><span class="material-symbols-outlined icon">bar_chart</span>Reports</a>
+      <a href="#"><img class="icon icon-grey" src="sidenav icons/Reports - grey.svg" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Reports - green.svg" alt="" aria-hidden="true">Reports</a>
       <a href="#"><span class="material-symbols-outlined icon">folder_open</span>Directory</a>
       <a href="#"><span class="material-symbols-outlined icon">manage_accounts</span>Users</a>
     </nav>
