@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in — Nomni Supply</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,100..900,0..100,0..1&family=Hanken+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; -webkit-font-smoothing: antialiased; }
+
+    .page {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    /* ── Login panel ── */
+    .login-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 50px;
+      background: #fff;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 34px;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: #b05ec0;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-icon svg { width: 18px; height: 18px; }
+
+    .logo-sub {
+      color: #1a1f2b;
+      font-weight: 400;
+      font-size: 28px;
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      line-height: 1;
+    }
+
+    /* ── Form area ── */
+    .form-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 21px;
+      width: 100%;
+    }
+
+    .form-area h1 {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 30px;
+      color: #1a1f2b;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .fields {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .fields input {
+      background: #f4f4f4;
+      border: none;
+      border-radius: 62px;
+      padding: 20px 24px;
+      font-size: 16px;
+      font-family: inherit;
+      color: #1a1f2b;
+      letter-spacing: -0.1px;
+      outline: none;
+      width: 100%;
+      transition: background .15s;
+    }
+
+    .fields input::placeholder { color: #8a8f98; }
+    .fields input:focus { background: #ebebeb; }
+
+    .btn-login {
+      background: #2AC864;
+      border: none;
+      border-radius: 62px;
+      padding: 20px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      color: #0E3727;
+      letter-spacing: -0.1px;
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+      transition: background .15s, color .15s;
+    }
+
+    .btn-login:hover { background: #0E3727; color: #2AC864; }
+    .btn-login:active { background: #0a2a1e; color: #2AC864; }
+
+    .forgot-link {
+      font-size: 14px;
+      color: #8a8f98;
+      text-align: center;
+      letter-spacing: -0.1px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* ── Footer ── */
+    .login-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .footer-links { display: flex; gap: 24px; }
+
+    .footer-links a {
+      font-size: 14px;
+      color: #8a8f98;
+      letter-spacing: -0.1px;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover { text-decoration: underline; }
+
+    .part-of {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0e3727;
+      letter-spacing: -0.1px;
+    }
+
+    .part-of img { height: 20px; width: auto; }
+
+    /* ── Image panel ── */
+    .image-panel {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: #E2FFE6;
+    }
+
+    .kitchen-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      pointer-events: none;
+    }
+
+    .gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(213deg, rgba(0,0,0,0) 52%, rgba(0,0,0,0.94) 94%);
+      z-index: 1;
+    }
+
+    .image-text {
+      position: absolute;
+      bottom: 56px;
+      left: 40px;
+      z-index: 2;
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-size: 90px;
+      line-height: 82px;
+      letter-spacing: -0.9px;
+      font-variation-settings: 'SOFT' 100, 'WONK' 1;
+      max-width: 500px;
+    }
+
+    .image-text .line-white { color: #fff; display: block; }
+    .image-text .line-green { color: #2AC864; display: block; }
+
+    /* ── Font inspector ── */
+    .font-inspector-btn {
+      position: fixed; top: 12px; right: 16px; z-index: 1000;
+      background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.25);
+      color: rgba(255,255,255,.7); cursor: pointer;
+      display: inline-flex; align-items: center;
+      padding: 3px 8px; border-radius: 6px;
+      transition: background .15s, color .15s, border-color .15s;
+      font-size: 11px; font-weight: 700; font-family: monospace; letter-spacing: .03em;
+    }
+    .font-inspector-btn:hover { background: rgba(0,0,0,.6); color: #fff; }
+    .font-inspector-btn.active { background: rgba(0,0,0,.75); color: #fff; border-color: rgba(255,255,255,.5); }
+    #font-inspector-tip {
+      position: fixed; background: #1a1f2b; color: #fff;
+      font-size: 11px; font-weight: 600; font-family: monospace;
+      padding: 3px 8px; border-radius: 4px; pointer-events: none;
+      z-index: 99999; display: none; white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,.3); letter-spacing: .02em;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Login panel -->
+  <div class="login-panel">
+
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="8" r="3.5" fill="#fff"/>
+          <path d="M4.5 20c0-4.142 3.358-7.5 7.5-7.5s7.5 3.358 7.5 7.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="logo-sub">Supply</div>
+    </div>
+
+    <div class="form-area">
+      <h1>Welcome back</h1>
+      <div class="fields">
+        <div class="field-group">
+          <input type="email" placeholder="Email address" autocomplete="email">
+          <input type="password" placeholder="Password" autocomplete="current-password">
+          <button class="btn-login" onclick="location.href='#'">Log in</button>
+        </div>
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+    </div>
+
+    <div class="login-footer">
+      <div class="footer-links">
+        <a href="https://www.nomni.ai/terms" target="_blank">Terms of use</a>
+        <a href="https://www.nomni.ai/privacy" target="_blank">Privacy Policy</a>
+      </div>
+      <div class="part-of">
+        Part of
+        <a href="https://www.nomni.ai" target="_blank" style="display:inline-flex;align-items:center"><img src="assets/nomni_full.svg" alt="nomni"></a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Image panel -->
+  <div class="image-panel">
+    <img class="kitchen-img" src="https://www.figma.com/api/mcp/asset/0e6535f8-fc99-45d2-ba49-43f929437c1b" alt="">
+    <div class="gradient"></div>
+    <div class="image-text">
+      <span class="line-white">Ditch the<br>WhatsApp orders.</span>
+      <span class="line-green">Keep the<br>customers.</span>
+    </div>
+  </div>
+
+</div>
+
+<button class="font-inspector-btn" id="fontInspectorBtn" title="Font size inspector">Aa</button>
+<div id="font-inspector-tip"></div>
+<script>
+(function(){
+  var btn = document.getElementById('fontInspectorBtn');
+  var tip = document.getElementById('font-inspector-tip');
+  var on = false;
+  var tokenMap = {
+    '10px': '--text-badge', '11px': '--text-xs', '12px': '--text-sm',
+    '14px': '--text-base',  '21px': '--text-heading', '24px': '--text-display'
+  };
+  var colorMap = {
+    'rgb(26, 31, 43)':   '--ink',
+    'rgb(138, 143, 152)':'--ink-mute',
+    'rgb(199, 201, 207)':'--ink-soft',
+    'rgb(26, 128, 64)':  '--spinach',
+    'rgb(42, 200, 100)': '--nomni-green',
+    'rgb(14, 55, 39)':   '--seaweed',
+    'rgb(255, 255, 255)':'white'
+  };
+  btn.addEventListener('click', function(){
+    on = !on;
+    btn.classList.toggle('active', on);
+    document.body.style.cursor = on ? 'crosshair' : '';
+    tip.style.display = 'none';
+  });
+  document.addEventListener('mousemove', function(e){
+    if (!on) return;
+    tip.style.left = (e.clientX + 14) + 'px';
+    tip.style.top = (e.clientY + 14) + 'px';
+  });
+  document.addEventListener('mouseover', function(e){
+    if (!on) return;
+    var s = window.getComputedStyle(e.target);
+    var fs = s.fontSize; var fw = s.fontWeight; var col = s.color;
+    var fsLabel = tokenMap[fs] ? fs + ' · ' + tokenMap[fs] : fs;
+    var colLabel = colorMap[col] || (function(c){
+      var m = c.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if (!m) return c;
+      return '#' + [m[1],m[2],m[3]].map(function(n){ return (+n).toString(16).padStart(2,'0'); }).join('');
+    })(col);
+    tip.textContent = fsLabel + ' · ' + fw + ' · ' + colLabel;
+    tip.style.display = 'block';
+  });
+  document.addEventListener('mouseleave', function(){ tip.style.display = 'none'; });
+})();
+</script>
+</body>
+</html>
