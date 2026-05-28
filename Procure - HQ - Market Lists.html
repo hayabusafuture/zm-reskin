@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Procure — HQ · Market Lists</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+<style>
+  :root {
+    --seaweed: #0E3727;
+    --nomni-green: #2AC864;
+    --spinach: #1A8040;
+    --mint: #E2FFE6;
+    --sidebar-bg: #F5F5F5;
+    --sidebar-item-active: rgba(42, 200, 100, 0.14);
+    --sidebar-text: #1a1f2b;
+    --ink: #1a1f2b;
+    --ink-2: #1a1f2b;
+    --ink-mute: #8a8f98;
+    --ink-soft: #c7c9cf;
+    --rule: #e7e8ec;
+    --primary: #2AC864;
+    --row-hover: #f7f8fa;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body { font-family: "Inter", system-ui, sans-serif; color: var(--ink); font-size: 14px; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+  .app { display: grid; grid-template-columns: 232px 1fr; grid-template-rows: 56px 1fr; min-height: 100vh; }
+
+  /* Topbar */
+  .topbar { grid-column: 1/-1; grid-row: 1; background: #1f2226; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; border-bottom: 1px solid #000; position: sticky; top: 0; z-index: 5; }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .topbar-right { display: flex; align-items: center; gap: 4px; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .help-btn { background: transparent; border: none; color: rgba(255,255,255,.7); cursor: pointer; display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 6px; transition: background .15s, color .15s; text-decoration: none; font-size: 14px; }
+  .help-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+  .help-btn .material-symbols-outlined { font-size: 18px; line-height: 1; }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand-logo-img { height: 26px; }
+  .brand-sub { color: var(--nomni-green); font-weight: 400; font-size: 23px; font-family: "Hanken Grotesk", sans-serif; line-height: 1; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: #7F6AD0; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+  .user { display: flex; align-items: center; gap: 10px; color: #fff; cursor: pointer; user-select: none; }
+  .chev { width: 10px; height: 10px; display: inline-block; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translate(-1px,-1px); }
+
+  /* Sidebar */
+  .sidebar { grid-column: 1; grid-row: 2; background: var(--sidebar-bg); display: flex; flex-direction: column; position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto; }
+  .nav { margin-top: 12px; padding: 6px 10px 0; display: flex; flex-direction: column; gap: 2px; }
+  .nav-section-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); padding: 14px 12px 4px; line-height: 1; }
+  .nav a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; color: var(--sidebar-text); text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 400; transition: background .15s, color .15s; }
+  .nav a .icon-wrap { flex: 0 0 18px; width: 18px; height: 18px; position: relative; display: block; }
+  .nav a .icon { position: absolute; top: 0; left: 0; width: 18px; height: 18px; }
+  .nav a .icon-green { display: none; }
+  .nav a.active .icon-grey { display: none; }
+  .nav a.active .icon-green { display: block; }
+  .nav a:hover { background: rgba(0,0,0,.05); }
+  .nav a.active { background: var(--sidebar-item-active); color: var(--seaweed); font-weight: 600; }
+  .nav a.active .icon { color: var(--spinach); }
+  .nav .badge { margin-left: auto; background: var(--nomni-green); color: var(--seaweed); font-size: 10px; font-weight: 700; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; align-self: center; }
+  .nav .warn-icon { margin-left: auto; display: inline-flex; align-items: center; flex-shrink: 0; height: 18px; align-self: center; }
+  .nav .warn-icon img { height: 18px; width: 18px; }
+  .nav-label { line-height: 1; }
+  /* HQ section */
+  .nav-hq-wrap { background: rgba(14,55,39,.05); margin: 4px -10px 0; padding: 4px 10px 8px; border-top: 1px solid rgba(42,200,100,.2); }
+  .nav-hq-wrap a { display: flex; align-items: center; gap: 12px; padding: 9px 12px; color: #2a5a40; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 400; transition: background .15s, color .15s; }
+  .nav-hq-wrap a .ms-icon { font-size: 18px; line-height: 1; flex: 0 0 18px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; color: #7aab8a; transition: color .15s; }
+  .nav-hq-wrap a:hover { background: rgba(42,200,100,.1); color: var(--seaweed); }
+  .nav-hq-wrap a:hover .ms-icon { color: var(--spinach); }
+  .nav-hq-wrap a.active { background: rgba(42,200,100,.16); color: var(--seaweed); font-weight: 600; }
+  .nav-hq-wrap a.active .ms-icon { color: var(--spinach); }
+  .sidebar-foot { padding: 16px; flex-shrink: 0; }
+  .help-fab { width: 44px; height: 44px; border-radius: 50%; background: #6c4df2; display: grid; place-items: center; color: #fff; box-shadow: 0 6px 18px rgba(108,77,242,.4); }
+
+  /* Main */
+  .main { grid-column: 2; grid-row: 2; padding: 32px 40px 56px; min-width: 0; background: #fff; }
+
+  /* Page head */
+  .page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 16px; }
+  .page-head-left { display: flex; align-items: baseline; gap: 12px; }
+  .page-title { font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.03em; }
+  .hq-chip { display: inline-flex; align-items: center; background: var(--seaweed); color: var(--nomni-green); font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 3px 8px; border-radius: 5px; }
+  .page-head-right { display: flex; align-items: center; gap: 8px; }
+  .btn { font-family: inherit; font-size: 14px; font-weight: 600; border-radius: 6px; padding: 8px 14px; border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; line-height: 1; white-space: nowrap; transition: background .18s, color .18s; }
+  .btn-primary { background: var(--nomni-green); color: var(--seaweed); border-color: var(--nomni-green); }
+  .btn-primary:hover { background: var(--seaweed); color: var(--nomni-green); border-color: var(--seaweed); }
+  .btn-ghost { background: none; border: none; color: var(--spinach); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; padding: 7px 10px; border-radius: 6px; transition: background .13s; }
+  .btn-ghost:hover { background: #f0faf3; }
+  .btn-ghost.muted { color: var(--ink-2); }
+  .btn-ghost.muted:hover { background: #f3f4f6; }
+
+  /* Page subtitle */
+  .page-sub { font-size: 13px; color: var(--ink-mute); margin: 0 0 24px; }
+  .page-sub strong { color: var(--ink-2); font-weight: 600; }
+
+  /* Site group tabs */
+  .sg-tabs { display: flex; border-bottom: 1px solid var(--rule); margin-bottom: 20px; }
+  .sg-tab { padding: 9px 18px; font-size: 13px; font-weight: 600; color: var(--ink-mute); cursor: pointer; position: relative; background: none; border: none; font-family: inherit; transition: color .15s; white-space: nowrap; }
+  .sg-tab:hover { color: var(--ink); }
+  .sg-tab.active { color: var(--ink); }
+  .sg-tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--primary); border-radius: 2px; }
+  .sg-tab .sg-count { font-size: 11px; color: var(--ink-mute); margin-left: 5px; font-weight: 400; }
+
+  /* Filter row */
+  .filter-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .search-wrap { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #dcdee3; border-radius: 6px; padding: 0 12px; height: 36px; width: 220px; }
+  .search-wrap svg { color: var(--ink-mute); flex: 0 0 auto; }
+  .search-wrap input { border: 0; outline: 0; background: transparent; font: inherit; color: var(--ink); width: 100%; }
+  .search-wrap input::placeholder { color: var(--ink-mute); }
+  .search-btn { height: 36px; padding: 0 16px; background: var(--seaweed); color: #fff; border: none; border-radius: 6px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .search-btn:hover { background: #0c2e20; }
+  .filter-btn { height: 36px; padding: 0 12px; background: #fff; border: 1px solid #dcdee3; border-radius: 6px; font: inherit; font-size: 14px; color: var(--ink-2); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .filter-btn .sm-chev { width: 8px; height: 8px; border-right: 1.5px solid var(--ink-mute); border-bottom: 1.5px solid var(--ink-mute); transform: rotate(45deg) translate(-1px,-1px); display: inline-block; }
+  .actions-right { margin-left: auto; display: flex; align-items: center; gap: 2px; }
+  .action-btn { background: transparent; border: none; font: inherit; font-size: 14px; font-weight: 600; color: var(--spinach); cursor: pointer; display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 6px; transition: background .13s; }
+  .action-btn:hover { background: #f0faf3; }
+  .action-btn.ink { color: var(--ink-2); }
+  .action-btn.ink:hover { background: #f3f4f6; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table.ml-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; }
+  .ml-table thead th { text-align: left; font-weight: 600; color: var(--ink-mute); padding: 12px 14px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); background: #fff; font-size: 12px; white-space: nowrap; }
+  .ml-table thead th.sort-asc::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 5px; border-left: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(-45deg) translateY(-2px); vertical-align: middle; }
+  .ml-table tbody td { padding: 13px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; background: #fff; transition: background .1s; }
+  .ml-table tbody tr:hover td { background: var(--row-hover); }
+  .ml-table tbody tr { cursor: pointer; }
+  .col-check { width: 32px; padding-right: 0 !important; }
+  .col-item { min-width: 240px; }
+  .col-price { width: 150px; }
+  .col-stype { width: 110px; }
+  .col-pricing { width: 150px; }
+  .col-visibility { width: 160px; }
+  .col-inv { width: 110px; }
+  .check { width: 14px; height: 14px; border: 1px solid #c7c9cf; border-radius: 3px; display: inline-block; background: #fff; }
+
+  .item-name { font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .item-supplier { font-size: 12px; color: var(--ink-mute); }
+  .item-code { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  .price-main { font-weight: 500; }
+  .price-moq { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+
+  /* Supplier type */
+  .chip-active { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; background: #e6f9ee; color: #0a7c3a; }
+  .chip-passive { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; background: #f3f4f6; color: var(--ink-mute); }
+  .chip-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .chip-active .chip-dot { background: #0a7c3a; }
+  .chip-passive .chip-dot { background: var(--ink-soft); }
+
+  /* Pricing levels */
+  .pl-default { font-size: 12px; font-weight: 600; color: var(--ink); }
+  .pl-extra { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ink-mute); margin-top: 3px; }
+  .pl-badge { background: #ede9fb; color: #6c4df2; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; letter-spacing: .03em; }
+
+  /* Visibility */
+  .vis-all { font-size: 12px; color: var(--ink-mute); }
+  .vis-group { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--spinach); }
+  .vis-excl { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #c47a00; }
+
+  /* Inv toggle pill */
+  .inv-on { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--spinach); }
+  .inv-off { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--ink-mute); }
+
+  /* Pagination */
+  .pager { display: flex; align-items: center; justify-content: space-between; padding: 16px 4px 4px; font-size: 12px; color: var(--ink-2); }
+  .pager .count b { color: var(--ink); }
+  .pager-btns { display: flex; gap: 4px; }
+  .pager-btn { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--rule); background: #fff; font: inherit; font-size: 13px; font-weight: 600; color: var(--ink-2); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .12s; }
+  .pager-btn:hover { background: #f3f4f6; }
+  .pager-btn.active { background: var(--seaweed); color: #fff; border-color: var(--seaweed); }
+  .pager-btn:disabled { opacity: .4; cursor: default; }
+
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,20,15,.46); z-index: 900; align-items: flex-start; justify-content: center; padding-top: 64px; }
+  .modal-overlay.open { display: flex; }
+  .modal-card { background: #fff; border-radius: 12px; width: 600px; max-width: calc(100vw - 32px); box-shadow: 0 24px 64px rgba(0,0,0,.22); position: relative; max-height: calc(100vh - 90px); display: flex; flex-direction: column; overflow: hidden; }
+  .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; cursor: pointer; color: var(--ink-mute); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: color .12s, background .12s; }
+  .modal-close:hover { color: var(--ink); background: #f3f4f6; }
+  .modal-header { padding: 20px 24px 0; flex: 0 0 auto; }
+  .modal-title { font-size: 18px; font-weight: 700; margin: 0 0 2px; letter-spacing: -.02em; }
+  .modal-sub { font-size: 12px; color: var(--ink-mute); margin: 0; }
+  .modal-tabs { display: flex; border-bottom: 1px solid var(--rule); margin: 16px 0 0; padding: 0 24px; gap: 0; }
+  .modal-tab { padding: 8px 0; margin-right: 20px; font-size: 14px; font-weight: 600; color: var(--ink-mute); cursor: pointer; position: relative; background: none; border: none; font-family: inherit; transition: color .13s; }
+  .modal-tab.active { color: var(--ink); }
+  .modal-tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--primary); border-radius: 2px; }
+  .modal-body { padding: 20px 24px 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+  .modal-foot { padding: 14px 24px 18px; border-top: 1px solid var(--rule); flex: 0 0 auto; }
+  .btn-save { background: var(--nomni-green); color: var(--seaweed); border: none; border-radius: 6px; font: inherit; font-size: 14px; font-weight: 600; padding: 9px 20px; cursor: pointer; }
+  .btn-save:hover { background: #22b055; }
+
+  /* Form fields */
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+  .field-label { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .field-hint { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .field-input { width: 100%; padding: 9px 12px; border: 1px solid #dcdee3; border-radius: 6px; font: inherit; font-size: 14px; color: var(--ink); outline: none; transition: border-color .13s; }
+  .field-input:focus { border-color: var(--nomni-green); }
+  .field-input::placeholder { color: var(--ink-mute); }
+  .field-select { width: 100%; padding: 9px 28px 9px 12px; border: 1px solid #dcdee3; border-radius: 6px; font: inherit; font-size: 14px; color: var(--ink-mute); outline: none; appearance: none; cursor: pointer; background: #fff url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238a8f98' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center; }
+  .field-select:focus { border-color: var(--nomni-green); }
+  .field-row { display: flex; align-items: center; justify-content: space-between; }
+  .add-link { font-size: 13px; font-weight: 600; color: var(--spinach); cursor: pointer; }
+  .unit-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+  .unit-table th { font-size: 12px; font-weight: 600; color: var(--ink-mute); text-align: left; padding: 8px 10px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); background: #fafafa; }
+  .unit-table td { padding: 10px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  .unit-input { width: 80px; padding: 6px 8px; border: 1px solid #dcdee3; border-radius: 5px; font: inherit; font-size: 13px; text-align: right; outline: none; }
+  .unit-input:focus { border-color: var(--nomni-green); }
+  .toggle { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+  .toggle-track { width: 36px; height: 20px; border-radius: 10px; background: var(--nomni-green); position: relative; flex: 0 0 36px; transition: background .15s; }
+  .toggle-track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: left .15s; }
+  .toggle-track.off { background: #dcdee3; }
+  .toggle-track.off::after { left: calc(100% - 18px); }
+  .toggle-label { font-size: 11px; font-weight: 700; color: var(--spinach); letter-spacing: .04em; text-transform: uppercase; }
+
+  /* Pricing levels tab */
+  .pl-section { display: flex; flex-direction: column; gap: 12px; }
+  .pl-card { border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+  .pl-card-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #fafafa; border-bottom: 1px solid var(--rule); }
+  .pl-card-name { font-size: 13px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .badge-default { font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; background: var(--seaweed); color: var(--nomni-green); padding: 2px 7px; border-radius: 4px; }
+  .badge-custom { font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; background: #ede9fb; color: #6c4df2; padding: 2px 7px; border-radius: 4px; }
+  .pl-card-actions { display: flex; gap: 8px; }
+  .pl-link { background: none; border: none; font: inherit; font-size: 12px; font-weight: 600; color: var(--spinach); cursor: pointer; padding: 2px 4px; }
+  .pl-link:hover { color: var(--seaweed); }
+  .pl-link.danger { color: #c02020; }
+  .pl-card-body { padding: 12px 14px; }
+  .pl-body-note { font-size: 12px; color: var(--ink-mute); margin: 0 0 8px; }
+  .pl-units { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+  .pl-units th { font-size: 11px; font-weight: 600; color: var(--ink-mute); text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--rule); }
+  .pl-units td { padding: 7px 8px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  .pl-units tr:last-child td { border-bottom: none; }
+  .add-pl-btn { width: 100%; background: none; border: 1px dashed #c0c2c8; border-radius: 6px; font: inherit; font-size: 13px; font-weight: 600; color: var(--ink-mute); cursor: pointer; padding: 9px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: border-color .13s, color .13s; }
+  .add-pl-btn:hover { border-color: var(--spinach); color: var(--spinach); }
+
+  /* Visibility tab */
+  .vis-section { display: flex; flex-direction: column; gap: 16px; }
+  .vis-options { display: flex; flex-direction: column; gap: 6px; }
+  .vis-option { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 7px; cursor: pointer; transition: border-color .13s, background .13s; }
+  .vis-option:hover { border-color: #b0b2b8; background: #fafafa; }
+  .vis-option.selected { border-color: var(--nomni-green); background: #f0faf4; }
+  .vis-radio { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #c7c9cf; flex: 0 0 16px; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: border-color .13s; }
+  .vis-option.selected .vis-radio { border-color: var(--nomni-green); background: var(--nomni-green); }
+  .vis-option.selected .vis-radio::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+  .vis-option-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .vis-option-desc { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .excl-list { display: flex; flex-direction: column; gap: 6px; }
+  .excl-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #fff8f0; border: 1px solid #f5d9a8; border-radius: 6px; font-size: 13px; }
+  .excl-remove { background: none; border: none; color: var(--ink-mute); cursor: pointer; font-size: 17px; line-height: 1; }
+  .add-excl-btn { background: none; border: 1px dashed #c0c2c8; border-radius: 6px; font: inherit; font-size: 12px; font-weight: 600; color: var(--ink-mute); cursor: pointer; padding: 7px 12px; display: inline-flex; align-items: center; gap: 5px; transition: border-color .13s, color .13s; }
+  .add-excl-btn:hover { border-color: var(--spinach); color: var(--spinach); }
+  .auto-inv-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #f9fafb; border: 1px solid var(--rule); border-radius: 8px; }
+  .auto-inv-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .auto-inv-desc { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+
+  /* user menu */
+  .user-wrap { position: relative; }
+  .user-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 248px; background: #fff; color: var(--ink); border-radius: 10px; box-shadow: 0 14px 40px rgba(10,20,15,.22), 0 2px 8px rgba(10,20,15,.08); display: none; z-index: 200; overflow: hidden; }
+  .user-menu.open { display: block; }
+  .user-menu-header { padding: 14px 16px 12px; }
+  .user-menu-name { font-size: 14px; font-weight: 600; }
+  .user-menu-email { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .user-menu-divider { height: 1px; background: var(--rule); }
+  .user-menu-section { padding: 6px 0; }
+  .user-menu-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 14px; color: var(--ink); text-decoration: none; cursor: pointer; transition: background .1s; white-space: nowrap; }
+  .user-menu-item:hover { background: #f3f4f6; }
+  .user-menu-item.logout { color: #e53535; }
+  .user-menu-item.supplier-hub { color: #1a6fcc; font-weight: 500; }
+  .font-inspector-btn { background: transparent; border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.6); cursor: pointer; display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; font-family: monospace; }
+
+  /* Group-view: hide Visibility column when scoped to a site group */
+  .ml-table.group-view th:nth-child(6),
+  .ml-table.group-view td:nth-child(6) { display: none; }
+
+  @media (max-width: 1280px) {
+    .app { grid-template-columns: 64px 1fr; }
+    .sidebar { position: fixed; top: 56px; left: 0; width: 64px; height: calc(100vh - 56px); overflow: hidden; transition: width 0.2s ease; z-index: 4; }
+    .sidebar:hover { width: 232px; box-shadow: 2px 0 12px rgba(0,0,0,.12); overflow-y: auto; }
+    .main { min-width: 900px; }
+    .nav a { white-space: nowrap; }
+    .nav-hq-wrap a { white-space: nowrap; }
+    .sidebar .nav-label, .sidebar .badge, .sidebar .warn-icon, .sidebar .nav-section-label { display: none; }
+    .sidebar:hover .nav-label { display: inline; }
+    .sidebar:hover .nav-section-label { display: block; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand">
+        <img class="brand-logo-img" src="assets/nomni-logo-light.svg" alt="nomni" />
+        <div class="brand-sub">Procure</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="font-inspector-btn" title="Font inspector">Aa</button>
+      <a href="https://support.zeemart.co/en/" target="_blank" class="help-btn">
+        <span class="material-symbols-outlined" aria-hidden="true">help</span> Help
+      </a>
+      <div class="user-wrap">
+        <div class="user" id="userMenuBtn">
+          <div class="avatar">WA</div>
+          <span>William Arya</span>
+          <span class="chev"></span>
+        </div>
+        <div class="user-menu" id="userMenu">
+          <div class="user-menu-header">
+            <div class="user-menu-name">William Arya (Zeemart)</div>
+            <div class="user-menu-email">william@zeemart.co</div>
+          </div>
+          <div class="user-menu-divider"></div>
+          <div class="user-menu-section">
+            <a href="Supply - Dashboard.html" class="user-menu-item supplier-hub"><span class="material-symbols-outlined" style="font-size:16px;line-height:1">open_in_new</span>Use Nomni Supply</a>
+            <a href="#" class="user-menu-item"><span class="material-symbols-outlined" style="font-size:16px;line-height:1;color:var(--ink-mute)">settings</span>Settings</a>
+            <a href="#" class="user-menu-item">Change password</a>
+          </div>
+          <div class="user-menu-divider"></div>
+          <div class="user-menu-section">
+            <a href="Procure - Login.html" class="user-menu-item logout">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <nav class="nav" aria-label="Primary">
+      <div class="nav-section-label">Outlet</div>
+      <a href="Procure - Dashboard.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Dashboard - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Dashboard - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Dashboard</span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Reports - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Reports - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Reports</span></a>
+      <a href="Procure - Orders.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Orders - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Orders - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Orders</span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Invoice - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Invoice - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Invoices</span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Payments - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Payments - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Payments</span></a>
+      <a href="Procure - Items.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Items - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Items - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Items</span></a>
+      <a href="Procure - Inventory.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Inventory - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Inventory - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Inventory</span></a>
+      <a href="Procure - Recipes.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Recipes - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Recipes - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Recipes</span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Outlets - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Outlets - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Outlets</span><span class="warn-icon"><img src="error_24dp_1F1F1F 1.png" width="20" height="20" alt=""></span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Users - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Users - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Users</span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/News - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/News - green.png" alt="" aria-hidden="true"></span><span class="nav-label">News</span><span class="badge">9</span></a>
+      <div class="nav-section-label">HQ Mgmt</div>
+      <div class="nav-hq-wrap">
+        <a href="Procure - HQ - Outlet Groups.html"><span class="ms-icon material-symbols-outlined">account_tree</span><span class="nav-label">Outlet groups</span></a>
+        <a href="Procure - HQ - Market Lists.html" class="active"><span class="ms-icon material-symbols-outlined">list_alt</span><span class="nav-label">Market lists</span></a>
+        <a href="Procure - HQ - Recipe Library.html"><span class="ms-icon material-symbols-outlined">menu_book</span><span class="nav-label">Recipe library</span></a>
+        <a href="#"><span class="ms-icon material-symbols-outlined">inventory</span><span class="nav-label">Inv. master</span></a>
+        <a href="#"><span class="ms-icon material-symbols-outlined">point_of_sale</span><span class="nav-label">POS mapping</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="help-fab" title="Help">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a8 8 0 1 1-3-6.2L21 5v5h-5"/><path d="M12 8v5l3 2"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <div class="page-head">
+      <div class="page-head-left">
+        <h1 class="page-title">Market lists</h1>
+        <span class="hq-chip">HQ</span>
+      </div>
+      <div class="page-head-right">
+        <button class="btn btn-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add item
+        </button>
+        <button class="btn-ghost muted">
+          <span class="material-symbols-outlined" style="font-size:17px;line-height:1">tune</span>
+          Manage pricing levels
+        </button>
+      </div>
+    </div>
+    <p class="page-sub">Managing market list for <strong>Zeemart Group</strong> · <strong>88 outlets</strong> across <strong>6 site groups</strong></p>
+
+    <!-- Site group tabs -->
+    <div class="sg-tabs">
+      <button class="sg-tab active" data-group="" onclick="setSGTab(this)">All <span class="sg-count">7 items</span></button>
+      <button class="sg-tab" data-group="nsw" onclick="setSGTab(this)">NSW Metro</button>
+      <button class="sg-tab" data-group="vic" onclick="setSGTab(this)">VIC Central</button>
+      <button class="sg-tab" data-group="qld" onclick="setSGTab(this)">QLD Coastal</button>
+      <button class="sg-tab" data-group="wa" onclick="setSGTab(this)">WA Metro</button>
+      <button class="sg-tab" data-group="sa" onclick="setSGTab(this)">SA Regional</button>
+      <button class="sg-tab" data-group="tas" onclick="setSGTab(this)">TAS Island</button>
+    </div>
+
+    <!-- Filter row -->
+    <div class="filter-row">
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search SKU or item name" />
+      </div>
+      <button class="search-btn">Search</button>
+      <button class="filter-btn">Supplier type <span class="sm-chev"></span></button>
+      <button class="filter-btn">Visibility <span class="sm-chev"></span></button>
+      <div class="actions-right">
+        <button class="action-btn ink">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Bulk update
+        </button>
+        <button class="action-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table class="ml-table">
+        <thead>
+          <tr>
+            <th class="col-check"><span class="check"></span></th>
+            <th class="col-item sort-asc">Item / SKU</th>
+            <th class="col-price">Default price</th>
+            <th class="col-stype">Supplier type</th>
+            <th class="col-pricing">Pricing levels</th>
+            <th class="col-visibility">Visibility</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="ml-row" data-id="1" data-name="10L CDBBN 1x1 COKE ZRO SGR KZMS" data-sku="108650" data-supplier="Coca-Cola (T)" data-stype="active" data-price="10.00" data-unit="ea" data-moq="2">
+            <td class="col-check"><span class="check"></span></td>
+            <td>
+              <div class="item-name">10L CDBBN 1x1 COKE ZRO SGR KZMS</div>
+              <div class="item-supplier">Coca-Cola (T)</div>
+              <div class="item-code">108650</div>
+            </td>
+            <td><div class="price-main">A$10.00/ea</div><div class="price-moq">MOQ: 2 ea</div></td>
+            <td><span class="chip-active"><span class="chip-dot"></span>Active</span></td>
+            <td>
+              <div class="pl-default">Default</div>
+              <div class="pl-extra"><span class="pl-badge">+2</span> State groups</div>
+            </td>
+            <td><span class="vis-all">All outlets</span></td>
+          </tr>
+          <tr class="ml-row" data-id="2" data-name="12 Adidas Foam Camo Group with Sauce 640g" data-sku="KSV_Z4642T4" data-supplier="Test Supplier" data-stype="passive" data-price="100.00" data-unit="ctn" data-moq="2">
+            <td class="col-check"><span class="check"></span></td>
+            <td>
+              <div class="item-name">12 Adidas Foam Camo Group with Sauce 640g</div>
+              <div class="item-supplier">Test Supplier</div>
+              <div class="item-code">KSV_Z4642T4</div>
+            </td>
+            <td><div class="price-main">A$100.00/ctn</div><div class="price-moq">MOQ: 2 ctn</div></td>
+            <td><span class="chip-passive"><span class="chip-dot"></span>Passive</span></td>
+            <td><div class="pl-default">Default</div></td>
+            <td><span class="vis-group"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>NSW Metro only</span></td>
+          </tr>
+          <tr class="ml-row" data-id="3" data-name="2 Adidas Foam Camo Group with Sauce 640g" data-sku="KSV_Z4642T5" data-supplier="Test Supplier" data-stype="passive" data-price="162.00" data-unit="ctn" data-moq="1">
+            <td class="col-check"><span class="check"></span></td>
+            <td>
+              <div class="item-name">2 Adidas Foam Camo Group with Sauce 640g</div>
+              <div class="item-supplier">Test Supplier</div>
+              <div class="item-code">KSV_Z4642T5</div>
+            </td>
+            <td><div class="price-main">A$162.00/ctn</div><div class="price-moq">MOQ: 1 ctn</div></td>
+            <td><span class="chip-passive"><span class="chip-dot"></span>Passive</span></td>
+            <td><div class="pl-default">Default</div></td>
+            <td><span class="vis-all">All outlets</span></td>
+          </tr>
+          <tr class="ml-row" data-id="4" data-name="A1 - 10L CDBBN 1x1 Fanta GrpRCMS" data-sku="AAA_FANTA_001" data-supplier="Coca-Cola" data-stype="active" data-price="3.00" data-unit="ea" data-moq="1">
+            <td class="col-check"><span class="check"></span></td>
+            <td>
+              <div class="item-name">A1 - 10L CDBBN 1x1 Fanta GrpRCMS</div>
+              <div class="item-supplier">Coca-Cola</div>
+              <div class="item-code">AAA_FANTA_001</div>
+            </td>
+            <td><div class="price-main">A$3.00/ea</div><div class="price-moq">MOQ: 1 ea</div></td>
+            <td><span class="chip-active"><span class="chip-dot"></span>Active</span></td>
+            <td>
+              <div class="pl-default">Default</div>
+              <div class="pl-extra"><span class="pl-badge">+1</span> Promo tier</div>
+            </td>
+            <td><span class="vis-excl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Excl: 1 outlet</span></td>
+          </tr>
+          <tr class="ml-row" data-id="5" data-name="AAA_Mohan_001_901" data-sku="M_CODE_001" data-supplier="Test Supplier 2" data-stype="active" data-price="200.50" data-unit="bag" data-moq="0">
+            <td class="col-check"><span class="check"></span></td>
+            <td>
+              <div class="item-name">AAA_Mohan_001_901</div>
+              <div class="item-supplier">Test Supplier 2</div>
+              <div class="item-code">M_CODE_001</div>
+            </td>
+            <td><div class="price-main">A$200.50/bag</div><div class="price-moq">MOQ: 0 bag</div></td>
+            <td><span class="chip-active"><span class="chip-dot"></span>Active</span></td>
+            <td><div class="pl-default">Default</div></td>
+            <td><span class="vis-group"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>QLD Coastal only</span></td>
+          </tr>
+          <tr class="ml-row" data-id="6" data-name="AAA_Mohan_001_902" data-sku="M_CODE_002" data-supplier="Test Supplier 2" data-stype="active" data-price="200.00" data-unit="box" data-moq="2">
+            <td class="col-check"><span class="check"></span></td>
+            <td>
+              <div class="item-name">AAA_Mohan_001_902</div>
+              <div class="item-supplier">Test Supplier 2</div>
+              <div class="item-code">M_CODE_002</div>
+            </td>
+            <td><div class="price-main">A$200.00/box</div><div class="price-moq">MOQ: 2 box</div></td>
+            <td><span class="chip-active"><span class="chip-dot"></span>Active</span></td>
+            <td>
+              <div class="pl-default">Default</div>
+              <div class="pl-extra"><span class="pl-badge">+2</span> State groups</div>
+            </td>
+            <td><span class="vis-all">All outlets</span></td>
+          </tr>
+          <tr class="ml-row" data-id="7" data-name="22 Adidas Foam Camo Group with Sauce 640g" data-sku="KSV_Z4642T6" data-supplier="Test Supplier" data-stype="passive" data-price="143.00" data-unit="ctn" data-moq="1">
+            <td class="col-check"><span class="check"></span></td>
+            <td>
+              <div class="item-name">22 Adidas Foam Camo Group with Sauce 640g</div>
+              <div class="item-supplier">Test Supplier</div>
+              <div class="item-code">KSV_Z4642T6</div>
+            </td>
+            <td><div class="price-main">A$143.00/ctn</div><div class="price-moq">MOQ: 1 ctn</div></td>
+            <td><span class="chip-passive"><span class="chip-dot"></span>Passive</span></td>
+            <td><div class="pl-default">Default</div></td>
+            <td><span class="vis-all">All outlets</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pager">
+      <span class="count">Showing <b>1 to 7</b> of <b>7</b> entries</span>
+      <div class="pager-btns">
+        <button class="pager-btn" disabled>«</button>
+        <button class="pager-btn" disabled>‹</button>
+        <button class="pager-btn active">1</button>
+        <button class="pager-btn" disabled>›</button>
+        <button class="pager-btn" disabled>»</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Edit item modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <p class="modal-title" id="modalTitle">10L CDBBN 1x1 COKE ZRO SGR KZMS</p>
+      <p class="modal-sub" id="modalSub">108650 · Coca-Cola (T) · Active supplier</p>
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="details">Details</button>
+        <button class="modal-tab" data-tab="pricing">Pricing levels</button>
+        <button class="modal-tab" data-tab="visibility">Visibility</button>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="modal-body" id="tabDetails">
+      <div class="field-group">
+        <label class="field-label">Custom name</label>
+        <input type="text" class="field-input" placeholder="" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Tags</label>
+        <select class="field-select"><option value="">Add tags</option><option>Kitchen</option><option>Bar</option><option>Beverages</option></select>
+        <p class="field-hint">Group market list items any way you like — e.g. Kitchen, Bar, Beverages</p>
+      </div>
+      <div class="field-group">
+        <div class="field-row">
+          <label class="field-label">Expense category</label>
+          <a class="add-link">Add new</a>
+        </div>
+        <select class="field-select"><option value="">Select a category</option><option>COGS - Food</option><option>COGS - Beverage</option></select>
+      </div>
+      <table class="unit-table">
+        <thead><tr><th>Order unit size</th><th>Include in market list</th><th>Price (A$)</th><th>MOQ</th></tr></thead>
+        <tbody>
+          <tr>
+            <td id="unitName">Each</td>
+            <td><label class="toggle"><span class="toggle-track" id="tt1"></span><span class="toggle-label" id="tl1">YES</span></label></td>
+            <td><input type="text" class="unit-input" id="uPrice" value="10.00" /></td>
+            <td><input type="text" class="unit-input" id="uMoq" value="2" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pricing levels -->
+    <div class="modal-body" id="tabPricing" style="display:none">
+      <p style="font-size:13px;color:var(--ink-mute);margin:0 0 4px">The <strong>Default</strong> level is mandatory and applies to all outlets. Additional levels override default pricing for specific site groups.</p>
+      <div class="pl-section">
+        <div class="pl-card">
+          <div class="pl-card-head">
+            <span class="pl-card-name"><span class="badge-default">Default</span> Standard pricing</span>
+            <div class="pl-card-actions"><button class="pl-link">Edit</button></div>
+          </div>
+          <div class="pl-card-body">
+            <table class="pl-units"><thead><tr><th>Unit</th><th>Price (A$)</th><th>MOQ</th><th>Include</th></tr></thead>
+              <tbody>
+                <tr><td>Each (ea)</td><td>A$10.00</td><td>2</td><td style="color:var(--spinach);font-weight:700;font-size:12px">✓</td></tr>
+                <tr><td>Carton (ctn)</td><td>A$108.00</td><td>1</td><td style="color:var(--spinach);font-weight:700;font-size:12px">✓</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="pl-card">
+          <div class="pl-card-head">
+            <span class="pl-card-name"><span class="badge-custom">Custom</span> State pricing — NSW</span>
+            <div class="pl-card-actions"><button class="pl-link">Edit</button><button class="pl-link danger">Remove</button></div>
+          </div>
+          <div class="pl-card-body">
+            <p class="pl-body-note">Applies to: <strong>NSW Metro</strong> site group</p>
+            <table class="pl-units"><thead><tr><th>Unit</th><th>Price (A$)</th><th>MOQ</th><th>Include</th></tr></thead>
+              <tbody><tr><td>Each (ea)</td><td>A$9.50</td><td>2</td><td style="color:var(--spinach);font-weight:700;font-size:12px">✓</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="pl-card">
+          <div class="pl-card-head">
+            <span class="pl-card-name"><span class="badge-custom">Custom</span> State pricing — VIC</span>
+            <div class="pl-card-actions"><button class="pl-link">Edit</button><button class="pl-link danger">Remove</button></div>
+          </div>
+          <div class="pl-card-body">
+            <p class="pl-body-note">Applies to: <strong>VIC Central</strong> site group</p>
+            <table class="pl-units"><thead><tr><th>Unit</th><th>Price (A$)</th><th>MOQ</th><th>Include</th></tr></thead>
+              <tbody><tr><td>Each (ea)</td><td>A$8.80</td><td>5</td><td style="color:var(--spinach);font-weight:700;font-size:12px">✓</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <button class="add-pl-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>Add pricing level</button>
+      </div>
+    </div>
+
+    <!-- Visibility -->
+    <div class="modal-body" id="tabVisibility" style="display:none">
+      <div class="vis-section">
+        <div>
+          <div class="field-label" style="margin-bottom:8px">Default visibility</div>
+          <div class="vis-options">
+            <label class="vis-option selected">
+              <span class="vis-radio"></span>
+              <span><div class="vis-option-title">All outlets &amp; site groups</div><div class="vis-option-desc">Every outlet managed by this HQ can see and order this item</div></span>
+            </label>
+            <label class="vis-option">
+              <span class="vis-radio"></span>
+              <span><div class="vis-option-title">Selected site groups only</div><div class="vis-option-desc">Only outlets within chosen site groups can see this item</div></span>
+            </label>
+            <label class="vis-option">
+              <span class="vis-radio"></span>
+              <span><div class="vis-option-title">Selected outlets only</div><div class="vis-option-desc">Manually choose which specific outlets can see this item</div></span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <div class="field-row" style="margin-bottom:6px">
+            <div class="field-label">Exclusions</div>
+            <button class="add-excl-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>Add exclusion</button>
+          </div>
+          <div class="field-hint" style="margin-bottom:10px">Exclude specific outlets even if they are within visible site groups</div>
+          <div class="excl-list">
+            <div class="excl-item">
+              <span>Happy Cakes (ABC Shopping Centre)</span>
+              <button class="excl-remove">×</button>
+            </div>
+          </div>
+        </div>
+        <div class="auto-inv-row">
+          <div><div class="auto-inv-title">Auto-add to Inventory</div><div class="auto-inv-desc">Automatically add this item to Inventory for all visible outlets/site groups</div></div>
+          <label class="toggle" style="margin-left:16px"><span class="toggle-track" id="tt2"></span><span class="toggle-label" id="tl2">YES</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-foot" id="modalFoot">
+      <button class="btn-save">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Cache original price and pricing-level cell HTML so we can restore on "All" tab
+  const origPrice = {}, origPricing = {};
+  document.querySelectorAll('.ml-row').forEach(row => {
+    const tds = row.querySelectorAll('td');
+    origPrice[row.dataset.id] = tds[2].innerHTML;
+    origPricing[row.dataset.id] = tds[4].innerHTML;
+  });
+
+  // Visibility and group-specific pricing per row
+  const mlData = {
+    '1': { vis: 'all', prices: { nsw: 'A$9.50/ea', vic: 'A$8.80/ea' }, labels: { nsw: 'NSW rate', vic: 'VIC rate' } },
+    '2': { vis: 'nsw' },
+    '3': { vis: 'all' },
+    '4': { vis: 'all' },
+    '5': { vis: 'qld' },
+    '6': { vis: 'all', prices: { nsw: 'A$185.00/box', vic: 'A$190.00/box' }, labels: { nsw: 'NSW rate', vic: 'VIC rate' } },
+    '7': { vis: 'all' }
+  };
+
+  function applyMLGroup(gk) {
+    const isAll = !gk;
+    document.querySelector('.ml-table').classList.toggle('group-view', !isAll);
+
+    let count = 0;
+    document.querySelectorAll('.ml-row').forEach(row => {
+      const id = row.dataset.id;
+      const d = mlData[id] || { vis: 'all' };
+      const show = isAll || d.vis === 'all' || d.vis === gk;
+      row.style.display = show ? '' : 'none';
+      if (!show) return;
+      count++;
+
+      const tds = row.querySelectorAll('td');
+      if (isAll) {
+        tds[2].innerHTML = origPrice[id];
+        tds[4].innerHTML = origPricing[id];
+      } else if (d.prices && d.prices[gk]) {
+        tds[2].innerHTML = `<div class="price-main">${d.prices[gk]}</div><div class="price-moq">MOQ: ${row.dataset.moq} ${row.dataset.unit}</div>`;
+        tds[4].innerHTML = `<div class="pl-default">${d.labels[gk]}</div>`;
+      } else {
+        tds[2].innerHTML = origPrice[id];
+        tds[4].innerHTML = '<div class="pl-default">Default</div>';
+      }
+    });
+
+    const total = isAll ? 7 : count;
+    document.querySelector('.pager .count').innerHTML = `Showing <b>1 to ${count}</b> of <b>${total}</b> entries`;
+  }
+
+  function setSGTab(el) {
+    document.querySelectorAll('.sg-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    applyMLGroup(el.dataset.group || null);
+  }
+
+  document.getElementById('userMenuBtn').addEventListener('click', e => { e.stopPropagation(); document.getElementById('userMenu').classList.toggle('open'); });
+  document.addEventListener('click', () => document.getElementById('userMenu').classList.remove('open'));
+
+  const modal = document.getElementById('modal');
+  const tabMap = { details: 'tabDetails', pricing: 'tabPricing', visibility: 'tabVisibility' };
+
+  document.querySelectorAll('.ml-row').forEach(row => {
+    row.addEventListener('click', e => {
+      if (e.target.closest('.col-check')) return;
+      document.getElementById('modalTitle').textContent = row.dataset.name;
+      document.getElementById('modalSub').textContent = row.dataset.sku + ' · ' + row.dataset.supplier + ' · ' + (row.dataset.stype === 'active' ? 'Active supplier' : 'Passive supplier');
+      document.getElementById('unitName').textContent = row.dataset.unit.charAt(0).toUpperCase() + row.dataset.unit.slice(1);
+      document.getElementById('uPrice').value = row.dataset.price;
+      document.getElementById('uMoq').value = row.dataset.moq;
+      modal.classList.add('open');
+      showTab('details');
+    });
+  });
+
+  document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+  document.querySelectorAll('.modal-tab').forEach(t => t.addEventListener('click', function() { showTab(this.dataset.tab); }));
+
+  function showTab(tab) {
+    document.querySelectorAll('.modal-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    Object.values(tabMap).forEach(id => document.getElementById(id).style.display = 'none');
+    document.getElementById(tabMap[tab]).style.display = '';
+  }
+
+  [['tt1','tl1'],['tt2','tl2']].forEach(([trackId, labelId]) => {
+    let on = true;
+    document.getElementById(trackId).parentElement.addEventListener('click', () => {
+      on = !on;
+      document.getElementById(trackId).classList.toggle('off', !on);
+      document.getElementById(labelId).textContent = on ? 'YES' : 'NO';
+      document.getElementById(labelId).style.color = on ? 'var(--spinach)' : 'var(--ink-mute)';
+    });
+  });
+
+  document.querySelectorAll('.vis-option').forEach(opt => {
+    opt.addEventListener('click', function() { document.querySelectorAll('.vis-option').forEach(o => o.classList.remove('selected')); this.classList.add('selected'); });
+  });
+</script>
+</body>
+</html>
