@@ -466,4 +466,5 @@ background: var(--mint); border: 1px solid #B9F0C5; color: var(--seaweed);
 ```
 
 ## Reference prototypes
+- Procure — Blank: test-hook.html
 - Procure — Recipes: Procure - Recipes.html
