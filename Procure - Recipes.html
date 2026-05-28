@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Procure — Recipes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+<style>
+  :root {
+    --seaweed: #0E3727;
+    --nomni-green: #2AC864;
+    --spinach: #1A8040;
+    --cream: #FAF7E9;
+    --mint: #E2FFE6;
+    --sidebar-bg: #F5F5F5;
+    --sidebar-item-active: rgba(42, 200, 100, 0.14);
+    --sidebar-text: #1a1f2b;
+    --ink: #1a1f2b;
+    --ink-2: #1a1f2b;
+    --ink-mute: #8a8f98;
+    --ink-soft: #c7c9cf;
+    --rule: #e7e8ec;
+    --primary: #2AC864;
+    --primary-ink: #0E3727;
+    --row-hover: #f7f8fa;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body {
+    font-family: "Inter", system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
+    color: var(--ink); font-size: 14px; line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+  }
+  .app {
+    display: grid;
+    grid-template-columns: 232px 1fr;
+    grid-template-rows: 56px 1fr;
+    min-height: 100vh;
+  }
+
+  /* Topbar */
+  .topbar {
+    grid-column: 1 / -1; grid-row: 1;
+    background: #1f2226; color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 22px; border-bottom: 1px solid #000;
+    position: sticky; top: 0; z-index: 5;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .topbar-right { display: flex; align-items: center; gap: 4px; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .help-btn {
+    background: transparent; border: none; color: rgba(255,255,255,.7); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 6px;
+    transition: background .15s, color .15s; text-decoration: none; font-size: 14px;
+  }
+  .help-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+  .help-btn .material-symbols-outlined { font-size: 18px; line-height: 1; }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand-logo-img { height: 26px; width: auto; display: block; }
+  .brand-sub { color: var(--nomni-green); font-weight: 400; font-size: 23px; font-family: "Hanken Grotesk", system-ui, sans-serif; line-height: 1; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: #7F6AD0; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; font-family: "Hanken Grotesk", system-ui, sans-serif; }
+  .user { display: flex; align-items: center; gap: 10px; font-weight: 400; color: #fff; cursor: pointer; user-select: none; }
+  .chev { width: 10px; height: 10px; display: inline-block; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translate(-1px,-1px); }
+
+  /* Sidebar */
+  .sidebar { grid-column: 1; grid-row: 2; background: var(--sidebar-bg); display: flex; flex-direction: column; position: sticky; top: 56px; height: calc(100vh - 56px); }
+  .nav { margin-top: 12px; padding: 6px 10px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .nav a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; color: var(--sidebar-text); text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 400; transition: background-color .15s, color .15s; }
+  .nav a .icon-wrap { flex: 0 0 18px; width: 18px; height: 18px; position: relative; display: block; }
+  .nav a .icon { position: absolute; top: 0; left: 0; width: 18px; height: 18px; }
+  .nav a .icon-green { display: none; }
+  .nav a.active .icon-grey { display: none; }
+  .nav a.active .icon-green { display: block; }
+  .nav a:hover { background: rgba(0,0,0,.05); }
+  .nav a.active { background: var(--sidebar-item-active); color: var(--seaweed); font-weight: 600; }
+  .nav .badge { margin-left: auto; background: var(--nomni-green); color: var(--seaweed); font-size: 10px; font-weight: 700; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; align-self: center; }
+  .nav .warn-icon { margin-left: auto; display: inline-flex; align-items: center; flex-shrink: 0; height: 18px; align-self: center; }
+  .nav .warn-icon img { height: 18px; width: 18px; }
+  .sidebar-foot { padding: 16px; }
+  .help-fab { width: 44px; height: 44px; border-radius: 50%; background: #6c4df2; display: grid; place-items: center; color: #fff; box-shadow: 0 6px 18px rgba(108,77,242,.4); }
+  .nav-label { line-height: 1; }
+
+  /* Main */
+  .main { grid-column: 2; grid-row: 2; padding: 32px 40px 56px; min-width: 0; background: #fff; }
+
+  /* Page head */
+  .page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .page-title { font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.03em; }
+  .page-help-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: none; border: none; font: inherit; font-size: 14px; font-weight: 600;
+    color: var(--spinach); cursor: pointer; padding: 6px 4px; border-radius: 6px;
+    transition: background .13s;
+  }
+  .page-help-btn:hover { background: #f0faf3; }
+
+  /* Search */
+  .search-row { margin-bottom: 20px; }
+  .search-wrap {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #fff; border: 1px solid #dcdee3; border-radius: 6px;
+    padding: 0 12px; height: 38px; width: 280px;
+  }
+  .search-wrap svg { color: var(--ink-mute); flex: 0 0 auto; }
+  .search-wrap input { border: 0; outline: 0; background: transparent; font: inherit; color: var(--ink); width: 100%; }
+  .search-wrap input::placeholder { color: var(--ink-mute); }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table.recipes-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; }
+  .recipes-table thead th {
+    text-align: left; font-weight: 600; color: var(--ink-mute); padding: 12px 16px;
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    background: #fff; font-size: 12px; white-space: nowrap;
+  }
+  .recipes-table thead th.sort-asc::after {
+    content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 5px;
+    border-left: 1px solid currentColor; border-bottom: 1px solid currentColor;
+    transform: rotate(-45deg) translateY(-2px); vertical-align: middle;
+  }
+  .recipes-table tbody td { padding: 14px 16px; border-bottom: 1px solid var(--rule); background: #fff; transition: background .1s; vertical-align: middle; }
+  .recipes-table tbody tr:hover td { background: var(--row-hover); }
+  .recipes-table tbody tr { cursor: pointer; }
+  .col-check { width: 32px; padding-right: 0 !important; }
+  .col-outlet { min-width: 260px; }
+  .col-recipes { width: 200px; }
+  .col-foodcost { width: 200px; }
+  .check { width: 14px; height: 14px; border: 1px solid #c7c9cf; border-radius: 3px; display: inline-block; background: #fff; }
+  .outlet-name { font-weight: 500; color: var(--ink); }
+  .recipe-count { color: var(--ink-2); }
+  .recipe-actions { display: flex; align-items: center; gap: 16px; }
+  .recipe-action-link { color: var(--spinach); font-weight: 600; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  .recipe-action-link:hover { color: var(--seaweed); }
+  .foodcost-range { color: var(--ink-2); }
+  .foodcost-empty { color: var(--ink-soft); }
+
+  /* Pagination */
+  .pager { display: flex; align-items: center; justify-content: space-between; padding: 16px 4px 4px; color: var(--ink-2); font-size: 12px; }
+  .pager .count b { color: var(--ink); }
+  .pager-btns { display: flex; align-items: center; gap: 4px; }
+  .pager-btn { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--rule); background: #fff; font: inherit; font-size: 13px; font-weight: 600; color: var(--ink-2); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .12s; }
+  .pager-btn:hover { background: #f3f4f6; }
+  .pager-btn.active { background: var(--seaweed); color: #fff; border-color: var(--seaweed); }
+  .pager-btn:disabled { opacity: .4; cursor: default; }
+
+  /* user menu */
+  .user-wrap { position: relative; }
+  .user-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 248px; background: #fff; color: var(--ink); border-radius: 10px; box-shadow: 0 14px 40px rgba(10,20,15,.22), 0 2px 8px rgba(10,20,15,.08); display: none; z-index: 200; overflow: hidden; }
+  .user-menu.open { display: block; }
+  .user-menu-header { padding: 14px 16px 12px; }
+  .user-menu-name { font-size: 14px; font-weight: 600; }
+  .user-menu-email { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .user-menu-divider { height: 1px; background: var(--rule); }
+  .user-menu-section { padding: 6px 0; }
+  .user-menu-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 14px; color: var(--ink); text-decoration: none; cursor: pointer; transition: background .1s; white-space: nowrap; }
+  .user-menu-item:hover { background: #f3f4f6; }
+  .user-menu-item.logout { color: #e53535; }
+  .user-menu-item.supplier-hub { color: #1a6fcc; font-weight: 500; }
+  .font-inspector-btn { background: transparent; border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.6); cursor: pointer; display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 6px; transition: background .15s, color .15s; font-size: 11px; font-weight: 700; font-family: monospace; }
+  .font-inspector-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+  @media (max-width: 1280px) {
+    .app { grid-template-columns: 64px 1fr; }
+    .sidebar { position: fixed; top: 56px; left: 0; width: 64px; height: calc(100vh - 56px); overflow: hidden; transition: width 0.2s ease; z-index: 4; }
+    .sidebar:hover { width: 232px; box-shadow: 2px 0 12px rgba(0,0,0,.12); }
+    .main { min-width: 900px; }
+    .nav a { white-space: nowrap; }
+    .sidebar .nav-label, .sidebar .nav .badge, .sidebar .nav .warn-icon { display: none; }
+    .sidebar:hover .nav-label { display: inline; }
+    .sidebar:hover .nav .badge { display: inline-grid; }
+    .sidebar:hover .nav .warn-icon { display: inline-flex; }
+  }
+
+  /* ── HQ Mgmt nav section ── */
+  .nav-section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-soft); padding: 14px 12px 4px; line-height: 1;
+  }
+  .nav-hq-wrap {
+    background: rgba(14,55,39,.05);
+    margin: 4px -10px 0; padding: 4px 10px 8px;
+    border-top: 1px solid rgba(42,200,100,.2);
+    flex-shrink: 0;
+  }
+  .nav-hq-wrap a {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 12px; color: #2a5a40;
+    text-decoration: none; border-radius: 6px;
+    font-size: 14px; font-weight: 400;
+    transition: background .15s, color .15s;
+  }
+  .nav-hq-wrap a .ms-icon {
+    font-size: 18px; line-height: 1; flex: 0 0 18px;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    color: #7aab8a;
+    transition: color .15s;
+  }
+  .nav-hq-wrap a:hover { background: rgba(42,200,100,.1); color: var(--seaweed); }
+  .nav-hq-wrap a:hover .ms-icon { color: var(--spinach); }
+  .nav-hq-wrap a.active { background: rgba(42,200,100,.16); color: var(--seaweed); font-weight: 600; }
+  .nav-hq-wrap a.active .ms-icon { color: var(--spinach); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand">
+        <img class="brand-logo-img" src="assets/nomni-logo-light.svg" alt="nomni" />
+        <div class="brand-sub">Procure</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="font-inspector-btn" title="Font inspector">Aa</button>
+      <a href="https://support.zeemart.co/en/" target="_blank" class="help-btn">
+        <span class="material-symbols-outlined" aria-hidden="true">help</span>
+        Help
+      </a>
+      <div class="user-wrap">
+        <div class="user" id="userMenuBtn" role="button" aria-haspopup="true" aria-expanded="false">
+          <div class="avatar">WA</div>
+          <span>William Arya</span>
+          <span class="chev"></span>
+        </div>
+        <div class="user-menu" id="userMenu">
+          <div class="user-menu-header">
+            <div class="user-menu-name">William Arya (Zeemart)</div>
+            <div class="user-menu-email">william@zeemart.co</div>
+          </div>
+          <div class="user-menu-divider"></div>
+          <div class="user-menu-section">
+            <a href="Supply - Dashboard.html" class="user-menu-item supplier-hub">
+              <span class="material-symbols-outlined" style="font-size:16px;line-height:1">open_in_new</span>
+              Use Nomni Supply
+            </a>
+            <a href="#" class="user-menu-item">
+              <span class="material-symbols-outlined" style="font-size:16px;line-height:1;color:var(--ink-mute)">settings</span>
+              Settings
+            </a>
+            <a href="#" class="user-menu-item">Change password</a>
+            <a href="#" class="user-menu-item">Companies</a>
+          </div>
+          <div class="user-menu-divider"></div>
+          <div class="user-menu-section">
+            <a href="#" class="user-menu-item">
+              <span class="material-symbols-outlined" style="font-size:16px;line-height:1;color:var(--ink-mute)">language</span>
+              English
+            </a>
+          </div>
+          <div class="user-menu-divider"></div>
+          <div class="user-menu-section">
+            <a href="https://www.nomni.ai/terms" class="user-menu-item" target="_blank">Terms of use</a>
+            <a href="https://www.nomni.ai/privacy" class="user-menu-item" target="_blank">Privacy Policy</a>
+            <a href="Procure - Login.html" class="user-menu-item logout">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <nav class="nav" aria-label="Primary">
+      <div class="nav-section-label">Outlet</div>
+      <a href="Procure - Dashboard.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Dashboard - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Dashboard - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Dashboard</span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Reports - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Reports - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Reports</span></a>
+      <a href="Procure - Orders.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Orders - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Orders - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Orders</span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Invoice - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Invoice - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Invoices</span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Payments - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Payments - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Payments</span></a>
+      <a href="Procure - Items.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Items - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Items - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Items</span></a>
+      <a href="Procure - Inventory.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Inventory - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Inventory - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Inventory</span></a>
+      <a href="Procure - Recipes.html" class="active"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Recipes - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Recipes - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Recipes</span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Outlets - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Outlets - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Outlets</span><span class="warn-icon"><img src="error_24dp_1F1F1F 1.png" width="20" height="20" alt=""></span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Users - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Users - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Users</span></a>
+      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/News - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/News - green.png" alt="" aria-hidden="true"></span><span class="nav-label">News</span><span class="badge">9</span></a>
+      <div class="nav-section-label">HQ Mgmt</div>
+      <div class="nav-hq-wrap">
+        <a href="Procure - HQ - Outlet Groups.html"><span class="ms-icon material-symbols-outlined">account_tree</span><span class="nav-label">Outlet groups</span></a>
+        <a href="Procure - HQ - Market Lists.html"><span class="ms-icon material-symbols-outlined">list_alt</span><span class="nav-label">Market lists</span></a>
+        <a href="Procure - HQ - Recipe Library.html"><span class="ms-icon material-symbols-outlined">menu_book</span><span class="nav-label">Recipe library</span></a>
+        <a href="#"><span class="ms-icon material-symbols-outlined">inventory</span><span class="nav-label">Inv. master</span></a>
+        <a href="#"><span class="ms-icon material-symbols-outlined">point_of_sale</span><span class="nav-label">POS mapping</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="help-fab" title="Help">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M21 12a8 8 0 1 1-3-6.2L21 5v5h-5"/>
+          <path d="M12 8v5l3 2"/>
+        </svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <div class="page-head">
+      <h1 class="page-title">Recipes</h1>
+      <button class="page-help-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Help
+      </button>
+    </div>
+
+    <!-- Search -->
+    <div class="search-row">
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search outlet name" />
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table class="recipes-table">
+        <thead>
+          <tr>
+            <th class="col-check"><span class="check"></span></th>
+            <th class="col-outlet sort-asc">Outlet</th>
+            <th class="col-recipes">Recipes</th>
+            <th class="col-foodcost">Food cost percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr onclick="window.location='Procure - Recipes - Outlet.html?outlet=Abacus+Cafe+(TEST)'">
+            <td class="col-check"><span class="check"></span></td>
+            <td class="outlet-name">Abacus Cafe (TEST)</td>
+            <td class="recipe-count">8</td>
+            <td class="foodcost-range">0.0% – 76.9%</td>
+          </tr>
+          <tr>
+            <td class="col-check"><span class="check"></span></td>
+            <td class="outlet-name">Happy Cakes (ABC Shopping Centre)</td>
+            <td>
+              <div class="recipe-actions">
+                <a href="Procure - Recipes - Outlet.html?outlet=Happy+Cakes+(ABC)" class="recipe-action-link">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                  Create new recipe
+                </a>
+                <a href="#" class="recipe-action-link" style="color:var(--ink-mute)">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy from…
+                </a>
+              </div>
+            </td>
+            <td class="foodcost-empty">—</td>
+          </tr>
+          <tr onclick="window.location='Procure - Recipes - Outlet.html?outlet=Happy+Cakes+CK'">
+            <td class="col-check"><span class="check"></span></td>
+            <td class="outlet-name">Happy Cakes CK</td>
+            <td class="recipe-count">1</td>
+            <td class="foodcost-range">0.0% – 0.0%</td>
+          </tr>
+          <tr onclick="window.location='Procure - Recipes - Outlet.html?outlet=Shake+Shack+(Demo)'">
+            <td class="col-check"><span class="check"></span></td>
+            <td class="outlet-name">Shake Shack (Demo)</td>
+            <td class="recipe-count">26</td>
+            <td class="foodcost-range">0.0% – 416.7%</td>
+          </tr>
+          <tr onclick="window.location='Procure - Recipes - Outlet.html'">
+            <td class="col-check"><span class="check"></span></td>
+            <td class="outlet-name">Test Outlet ZM</td>
+            <td class="recipe-count">105</td>
+            <td class="foodcost-range">0.0% – 1,535.5%</td>
+          </tr>
+          <tr>
+            <td class="col-check"><span class="check"></span></td>
+            <td class="outlet-name">Urban Market (TEST)</td>
+            <td>
+              <div class="recipe-actions">
+                <a href="Procure - Recipes - Outlet.html?outlet=Urban+Market+(TEST)" class="recipe-action-link">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                  Create new recipe
+                </a>
+                <a href="#" class="recipe-action-link" style="color:var(--ink-mute)">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy from…
+                </a>
+              </div>
+            </td>
+            <td class="foodcost-empty">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pager">
+      <span class="count">Showing <b>1 to 6</b> of <b>6</b> entries</span>
+      <div class="pager-btns">
+        <button class="pager-btn" disabled>«</button>
+        <button class="pager-btn" disabled>‹</button>
+        <button class="pager-btn active">1</button>
+        <button class="pager-btn" disabled>›</button>
+        <button class="pager-btn" disabled>»</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  document.getElementById('userMenuBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('userMenu').classList.toggle('open');
+  });
+  document.addEventListener('click', () => document.getElementById('userMenu').classList.remove('open'));
+</script>
+</body>
+</html>
