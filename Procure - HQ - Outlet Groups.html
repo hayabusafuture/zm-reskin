@@ -167,6 +167,13 @@
   .btn-outline { background: none; border: 1px solid #d0d2d8; color: var(--ink); border-radius: 6px; font: inherit; font-size: 14px; font-weight: 600; padding: 7px 16px; cursor: pointer; transition: background .13s; white-space: nowrap; }
   .btn-outline:hover { background: #f3f4f6; }
 
+  /* Add dropdown */
+  .add-btn-wrap { position: relative; display: inline-block; }
+  .add-dropdown { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: #fff; border: 1px solid #e0e2e8; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.12); z-index: 400; overflow: hidden; min-width: 180px; }
+  .add-dropdown.open { display: block; }
+  .add-option { padding: 11px 16px; font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; transition: background .1s; white-space: nowrap; }
+  .add-option:hover { background: var(--mint); }
+
   /* User menu */
   .user-wrap { position: relative; }
   .user-menu { position: absolute; top: calc(100% + 8px); right: 0; width: 248px; background: #fff; color: var(--ink); border-radius: 10px; box-shadow: 0 14px 40px rgba(10,20,15,.22), 0 2px 8px rgba(10,20,15,.08); display: none; z-index: 200; overflow: hidden; }
@@ -353,10 +360,17 @@
         <h1 class="page-title">Outlets</h1>
         
       </div>
-      <button class="btn-primary" id="actionBtn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-        <span id="actionBtnLabel">Add outlet</span>
-      </button>
+      <div class="add-btn-wrap">
+        <button class="btn-primary" id="actionBtn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="margin-left:2px"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="add-dropdown" id="addDropdown">
+          <div class="add-option" id="addOutletOpt">New outlet</div>
+          <div class="add-option" id="addGroupOpt">New outlet group</div>
+        </div>
+      </div>
     </div>
 
     <!-- Tabs -->
@@ -630,7 +644,6 @@
     document.getElementById('tabGroupsBtn').classList.toggle('active', !isOutlets);
     document.getElementById('panelOutlets').style.display = isOutlets ? '' : 'none';
     document.getElementById('panelGroups').style.display = isOutlets ? 'none' : '';
-    document.getElementById('actionBtnLabel').textContent = isOutlets ? 'Add outlet' : 'Add group';
   }
   document.getElementById('tabOutletsBtn').addEventListener('click', () => switchTab('outlets'));
   document.getElementById('tabGroupsBtn').addEventListener('click', () => switchTab('groups'));
@@ -658,9 +671,21 @@
   });
 
   const modal = document.getElementById('modal');
-  document.getElementById('actionBtn').addEventListener('click', () => {
-    if (document.getElementById('tabGroupsBtn').classList.contains('active')) modal.classList.add('open');
+  // Add dropdown
+  const addBtn = document.getElementById('actionBtn');
+  const addDropdown = document.getElementById('addDropdown');
+  addBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    addDropdown.classList.toggle('open');
   });
+  document.getElementById('addGroupOpt').addEventListener('click', function() {
+    addDropdown.classList.remove('open');
+    modal.classList.add('open');
+  });
+  document.getElementById('addOutletOpt').addEventListener('click', function() {
+    addDropdown.classList.remove('open');
+  });
+  document.addEventListener('click', function() { addDropdown.classList.remove('open'); });
   document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
   document.getElementById('modalCancel').addEventListener('click', () => modal.classList.remove('open'));
   modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
