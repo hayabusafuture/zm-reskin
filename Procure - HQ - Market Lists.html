@@ -282,7 +282,47 @@
     .sidebar .nav-label, .sidebar .badge, .sidebar .warn-icon, .sidebar .nav-section-label { display: none; }
     .sidebar:hover .nav-label { display: inline; }
     .sidebar:hover .nav-section-label { display: block; }
+    /* Collapsed mode switcher */
+    .sidebar .mode-label { display: none; }
+    .sidebar .mode-icon { display: block; }
+    .sidebar:not(:hover) .sidebar-mode-wrap { padding: 10px 0 0; display: flex; align-items: flex-start; justify-content: center; height: 46px; flex-shrink: 0; }
+    .sidebar:not(:hover) .sidebar-mode-pill { background: transparent; padding: 0; justify-content: center; }
+    .sidebar:not(:hover) .sidebar-mode-opt:not(.active) { display: none; }
+    .sidebar:not(:hover) .sidebar-mode-opt.active { flex: 0 0 auto; width: 36px; height: 36px; padding: 0; background: rgba(0,0,0,.08); box-shadow: none; border-radius: 8px; color: var(--seaweed); }
+    .sidebar:hover .sidebar-mode-wrap { padding: 10px 10px 0; height: auto; display: block; }
+    .sidebar:hover .sidebar-mode-opt { display: inline-flex; padding: 6px 8px; width: auto; height: auto; }
+    .sidebar:hover .mode-label { display: inline; }
+    .sidebar:hover .mode-icon { display: none; }
+    .sidebar:not(:hover) .sidebar-hq-select { display: none !important; }
+    .sidebar:hover .sidebar-hq-select { display: block; }
+
   }
+
+  /* ── Sidebar mode switcher ── */
+  .sidebar-mode-wrap { padding: 10px 10px 0; flex-shrink: 0; }
+  .sidebar-mode-pill { display: flex; background: rgba(0,0,0,.07); border-radius: 8px; padding: 3px; gap: 2px; }
+  .sidebar-mode-opt { flex: 1; background: transparent; border: none; color: var(--ink-mute); font-family: inherit; font-size: 13px; font-weight: 500; padding: 6px 8px; border-radius: 6px; cursor: pointer; transition: background .15s, color .15s; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+  .sidebar-mode-opt.active { background: #fff; color: var(--seaweed); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .sidebar-mode-opt:not(.active):hover { color: var(--ink); }
+  .mode-icon { display: none; flex-shrink: 0; }
+  .mode-label { display: inline; }
+
+  /* HQ selector in sidebar */
+  .sidebar-hq-select { margin: 8px 0 2px; position: relative; }
+  .sidebar-hq-btn { width: 100%; display: flex; align-items: center; gap: 8px; padding: 7px 10px; border: 1px solid var(--rule); border-radius: 6px; background: #fff; font: inherit; font-size: 13px; font-weight: 500; color: var(--ink); cursor: pointer; transition: border-color .13s; text-align: left; }
+  .sidebar-hq-btn:hover { border-color: #b0b4bc; }
+  .sidebar-hq-btn.open { border-color: var(--nomni-green); }
+  .sidebar-hq-btn-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sidebar-hq-dropdown { position: absolute; left: 0; right: 0; top: calc(100% + 4px); background: #fff; border: 1px solid #e0e2e8; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.14); z-index: 50; overflow: hidden; display: none; }
+  .sidebar-hq-dropdown.open { display: block; }
+  .sidebar-hq-option { padding: 9px 12px; font-size: 13px; color: var(--ink); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: background .1s; }
+  .sidebar-hq-option:hover { background: var(--mint); }
+  .sidebar-hq-option.active { font-weight: 600; color: var(--seaweed); }
+  .sidebar-hq-option.active::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--nomni-green); display: block; flex-shrink: 0; }
+  /* HQ nav MS icons */
+  .nav a .ms-icon { font-size: 18px; line-height: 1; flex: 0 0 18px; font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; color: #888888; transition: color .15s; }
+  .nav a:hover .ms-icon { color: #888; }
+  .nav a.active .ms-icon { color: var(--spinach); }
 </style>
 </head>
 <body>
@@ -329,27 +369,38 @@
 
   <!-- Sidebar -->
   <aside class="sidebar">
-    <nav class="nav" aria-label="Primary">
-      <div class="nav-section-label">Outlet</div>
-      <a href="Procure - Dashboard.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Dashboard - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Dashboard - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Dashboard</span></a>
-      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Reports - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Reports - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Reports</span></a>
-      <a href="Procure - Orders.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Orders - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Orders - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Orders</span></a>
-      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Invoice - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Invoice - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Invoices</span></a>
-      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Payments - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Payments - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Payments</span></a>
-      <a href="Procure - Items.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Items - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Items - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Items</span></a>
-      <a href="Procure - Inventory.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Inventory - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Inventory - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Inventory</span></a>
-      <a href="Procure - Recipes.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Recipes - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Recipes - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Recipes</span></a>
-      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Outlets - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Outlets - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Outlets</span><span class="warn-icon"><img src="error_24dp_1F1F1F 1.png" width="20" height="20" alt=""></span></a>
-      <a href="Procure - Users.html"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/Users - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/Users - green.png" alt="" aria-hidden="true"></span><span class="nav-label">Users</span></a>
-      <a href="#"><span class="icon-wrap"><img class="icon icon-grey" src="sidenav icons/News - grey.png" alt="" aria-hidden="true"><img class="icon icon-green" src="sidenav icons/News - green.png" alt="" aria-hidden="true"></span><span class="nav-label">News</span><span class="badge">9</span></a>
-      <div class="nav-section-label">HQ Mgmt</div>
-      <div class="nav-hq-wrap">
-        <a href="Procure - HQ - Outlet Groups.html"><span class="ms-icon material-symbols-outlined">account_tree</span><span class="nav-label">Outlet groups</span></a>
-        <a href="Procure - HQ - Market Lists.html" class="active"><span class="ms-icon material-symbols-outlined">list_alt</span><span class="nav-label">Market lists</span></a>
-        <a href="Procure - HQ - Recipe Library.html"><span class="ms-icon material-symbols-outlined">menu_book</span><span class="nav-label">Recipe library</span></a>
-        <a href="#"><span class="ms-icon material-symbols-outlined">inventory</span><span class="nav-label">Inv. master</span></a>
-        <a href="#"><span class="ms-icon material-symbols-outlined">point_of_sale</span><span class="nav-label">POS mapping</span></a>
+    <div class="sidebar-mode-wrap">
+      <div class="sidebar-mode-pill">
+        <button class="sidebar-mode-opt" id="outletModeBtn">
+          <svg class="mode-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span class="mode-label">Outlet</span>
+        </button>
+        <button class="sidebar-mode-opt active" id="hqModeBtn">
+          <svg class="mode-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="1"/><path d="M16 21V7M8 21V7M2 12h20"/><path d="M9 3h6l2 4H7z"/></svg>
+          <span class="mode-label">HQ</span>
+        </button>
       </div>
+      <div class="sidebar-hq-select" id="sidebarHqSelect">
+        <button class="sidebar-hq-btn" id="sidebarHqBtn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--ink-mute)"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span class="sidebar-hq-btn-name" id="sidebarHqName">Roll'd Australia HQ</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="color:var(--ink-mute)"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="sidebar-hq-dropdown" id="sidebarHqDropdown">
+          <div class="sidebar-hq-option active">Roll'd Australia HQ</div>
+          <div class="sidebar-hq-option">Liven Group HQ</div>
+          <div class="sidebar-hq-option">Shake Shack SG HQ</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="Procure - HQ - Dashboard.html"><span class="ms-icon material-symbols-outlined">dashboard</span><span class="nav-label">Dashboard</span></a>
+      <a href="Procure - HQ - Outlet Groups.html"><span class="ms-icon material-symbols-outlined">account_tree</span><span class="nav-label">Outlet groups</span></a>
+      <a href="Procure - HQ - Market Lists.html" class="active"><span class="ms-icon material-symbols-outlined">list_alt</span><span class="nav-label">Market lists</span></a>
+      <a href="Procure - HQ - Recipe Library.html"><span class="ms-icon material-symbols-outlined">menu_book</span><span class="nav-label">Recipe library</span></a>
+      <a href="#"><span class="ms-icon material-symbols-outlined">inventory</span><span class="nav-label">Inv. master</span></a>
+      <a href="#"><span class="ms-icon material-symbols-outlined">point_of_sale</span><span class="nav-label">POS mapping</span></a>
     </nav>
     <div class="sidebar-foot">
       <div class="help-fab" title="Help">
@@ -773,6 +824,36 @@
   document.querySelectorAll('.vis-option').forEach(opt => {
     opt.addEventListener('click', function() { document.querySelectorAll('.vis-option').forEach(o => o.classList.remove('selected')); this.classList.add('selected'); });
   });
+</script>
+<script>
+  // Outlet mode switch
+  document.getElementById('outletModeBtn').addEventListener('click', function() {
+    window.location.href = 'Procure - Dashboard.html';
+  });
+  // HQ selector dropdown
+  (function() {
+    var btn = document.getElementById('sidebarHqBtn');
+    var dd = document.getElementById('sidebarHqDropdown');
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dd.classList.toggle('open');
+      btn.classList.toggle('open');
+    });
+    document.querySelectorAll('.sidebar-hq-option').forEach(function(opt) {
+      opt.addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.querySelectorAll('.sidebar-hq-option').forEach(function(o){ o.classList.remove('active'); });
+        this.classList.add('active');
+        document.getElementById('sidebarHqName').textContent = this.textContent.trim();
+        dd.classList.remove('open');
+        btn.classList.remove('open');
+      });
+    });
+    document.addEventListener('click', function() {
+      dd.classList.remove('open');
+      btn.classList.remove('open');
+    });
+  })();
 </script>
 </body>
 </html>
