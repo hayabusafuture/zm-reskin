@@ -121,6 +121,7 @@
   .tag-select-box { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; border: 1px solid #dcdee3; border-radius: 6px; padding: 6px 36px 6px 8px; min-height: 40px; cursor: pointer; background: #fff; transition: border-color .13s; }
   .tag-select-box:focus-within,
   .tag-select-box.open { border-color: var(--nomni-green); }
+  .tag-placeholder { font-size: 14px; color: var(--ink-mute); padding: 1px 4px; }
   .tag-select-arrow { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; }
   .tag { display: inline-flex; align-items: center; gap: 3px; border-radius: 4px; padding: 2px 4px 2px 6px; font-size: 13px; font-weight: 500; color: var(--ink); background: #fff; border: 1px solid #dcdee3; }
   .tag-x { background: none; border: none; cursor: pointer; color: var(--nomni-green); font-size: 14px; font-weight: 700; line-height: 1; padding: 0; display: flex; align-items: center; transition: color .1s; }
@@ -223,6 +224,33 @@
   .sidebar-mode-opt:not(.active):hover { color: var(--ink); }
   .mode-icon { display: none; flex-shrink: 0; }
   .mode-label { display: inline; }
+
+  /* Linking note */
+  .section-note-prominent { display: inline-flex; align-items: flex-start; gap: 7px; font-size: 13px; font-weight: 500; color: var(--seaweed); background: var(--mint); border: 1px solid #B9F0C5; border-radius: 6px; padding: 8px 12px; margin-bottom: 18px; line-height: 1.4; }
+  .section-note-prominent svg { flex-shrink: 0; margin-top: 1px; color: var(--spinach); }
+
+  /* Inner divider */
+  .inner-divider { height: 1px; background: var(--rule); margin: 24px 0; }
+
+  /* HQ access section */
+  .hq-toggle-row { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; border: 1px solid var(--rule); border-radius: 8px; cursor: pointer; margin-bottom: 20px; transition: background .13s; user-select: none; }
+  .hq-toggle-row:hover { background: #fafafa; }
+  .toggle-track { width: 36px; height: 20px; border-radius: 10px; background: #dcdee3; position: relative; transition: background .2s; flex-shrink: 0; margin-top: 2px; }
+  .toggle-track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: left .2s; }
+  .toggle-track.on { background: var(--nomni-green); }
+  .toggle-track.on::after { left: 18px; }
+  .hq-toggle-text { flex: 1; }
+  .hq-toggle-label { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .hq-toggle-desc { font-size: 12px; color: var(--ink-mute); margin-top: 3px; line-height: 1.5; }
+  .hq-features { display: none; margin-bottom: 8px; }
+  .hq-features.visible { display: block; }
+  .hq-feat-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; cursor: pointer; }
+  .hq-feat-item input[type="checkbox"] { width: 14px; height: 14px; margin-top: 2px; accent-color: var(--nomni-green); flex-shrink: 0; cursor: pointer; }
+  .hq-feat-item-text { flex: 1; }
+  .hq-feat-label { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .hq-feat-desc { font-size: 12px; color: var(--ink-mute); margin-top: 2px; line-height: 1.4; }
+  .hq-perm-group { transition: opacity .2s; }
+  .hq-perm-group.disabled { opacity: .35; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -373,9 +401,13 @@
 
       <div class="section-divider"></div>
 
-      <!-- ── Outlet ── -->
-      <h2 class="section-heading" style="margin-top:0">Outlet</h2>
-      <p class="section-note">Note: User must be linked to at least ONE outlet</p>
+      <!-- ── Outlet access & permissions ── -->
+      <h2 class="section-heading" style="margin-top:0">Outlet access &amp; permissions</h2>
+
+      <div class="section-note-prominent" id="linkingNote">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        User must be linked to at least ONE outlet or HQ
+      </div>
 
       <div class="field-group">
         <label class="field-label">Company</label>
@@ -416,19 +448,21 @@
         </div>
       </div>
 
-      <div class="section-divider"></div>
+      <div class="inner-divider"></div>
 
-      <!-- ── Permissions ── -->
-      <div class="perm-header">
-        <h2 class="perm-heading">Permissions</h2>
+      <!-- Permissions sub-section -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div>
+          <label class="field-label" style="margin-bottom:2px">Permissions</label>
+          <span class="field-hint" style="display:block">Set what the user can do in Nomni Procure</span>
+        </div>
         <button class="copy-from-btn" id="copyFromBtn">
           Copy from...
           <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#1a1f2b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
-      <p class="perm-desc">Set what the user can do in Nomni Procure</p>
 
-      <select class="perm-role-select" id="permRole">
+      <select class="perm-role-select" id="permRole" style="margin-top:12px">
         <option>Owner</option>
         <option>Admin</option>
         <option>Standard</option>
@@ -439,7 +473,6 @@
 
       <!-- 2-column permission grid -->
       <div class="perm-grid">
-        <!-- Left column -->
         <div class="perm-col">
           <div class="perm-cat">
             <div class="perm-cat-title">Companies</div>
@@ -464,8 +497,6 @@
             <label class="perm-item"><input type="checkbox" checked /><label>Manage reports</label></label>
           </div>
         </div>
-
-        <!-- Right column -->
         <div class="perm-col">
           <div class="perm-cat">
             <div class="perm-cat-title">Invoices</div>
@@ -502,15 +533,6 @@
         </div>
       </div>
 
-      <!-- Notifications (full width) -->
-      <div class="perm-full">
-        <div class="perm-cat">
-          <div class="perm-cat-title">Notifications</div>
-          <label class="perm-item"><input type="checkbox" /><label>Notify user when order email remains unopened after some time</label></label>
-        </div>
-      </div>
-
-      <!-- Other permissions (full width) -->
       <div class="perm-full">
         <div class="perm-cat">
           <div class="perm-cat-title">Other permissions</div>
@@ -518,6 +540,76 @@
           <label class="perm-item"><input type="checkbox" /><label>Allow user to cancel any orders</label></label>
         </div>
       </div>
+
+      <div class="section-divider"></div>
+
+      <!-- ── HQ access ── -->
+      <h2 class="section-heading" style="margin-top:0">HQ access</h2>
+      <p class="section-note" style="margin-top:-8px;margin-bottom:16px">When enabled, the user can switch to HQ mode to access cross-outlet governance tools.</p>
+
+      <div class="hq-toggle-row" id="hqToggleRow">
+        <span class="toggle-track" id="hqToggle"></span>
+        <div class="hq-toggle-text">
+          <div class="hq-toggle-label">Enable HQ mode for this user</div>
+          <div class="hq-toggle-desc">The user will see a mode switcher to move between their outlet view and the HQ management view</div>
+        </div>
+      </div>
+
+      <div class="hq-features" id="hqFeatures">
+
+        <div class="field-group">
+          <label class="field-label">Linked HQs</label>
+          <div class="tag-select-wrap">
+            <div class="tag-select-box" id="hqBox">
+              <span class="tag-placeholder" id="hqPlaceholder">Select HQ</span>
+            </div>
+            <svg class="tag-select-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#8a8f98" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="tag-dropdown" id="hqDropdown">
+              <div class="tag-option" onclick="addHqTag(this)">Roll'd Australia HQ</div>
+              <div class="tag-option" onclick="addHqTag(this)">Liven Group HQ</div>
+              <div class="tag-option" onclick="addHqTag(this)">Shake Shack SG HQ</div>
+              <div class="tag-option" onclick="addHqTag(this)">Baoshi HQ</div>
+            </div>
+          </div>
+          <span class="field-hint">The user will have access to HQ features for each linked HQ</span>
+        </div>
+
+        <div class="hq-perm-group disabled" id="hqPermGroup">
+          <label class="field-label" style="margin-bottom:4px;display:block">Permissions</label>
+          <span class="field-hint" style="display:block;margin-bottom:12px">These permissions only apply while the user is in HQ mode</span>
+          <label class="hq-feat-item">
+            <input type="checkbox" />
+            <div class="hq-feat-item-text">
+              <div class="hq-feat-label">Manage user accounts</div>
+              <div class="hq-feat-desc">Can create accounts, update contact details, and disable outlet accounts (except Owners) and HQ users</div>
+            </div>
+          </label>
+          <label class="hq-feat-item">
+            <input type="checkbox" />
+            <div class="hq-feat-item-text">
+              <div class="hq-feat-label">Grant HQ access</div>
+              <div class="hq-feat-desc">Can enable HQ mode on a user account</div>
+            </div>
+          </label>
+          <label class="hq-feat-item">
+            <input type="checkbox" />
+            <div class="hq-feat-item-text">
+              <div class="hq-feat-label">Revoke HQ access</div>
+              <div class="hq-feat-desc">Can disable HQ mode on a user account</div>
+            </div>
+          </label>
+        </div>
+
+      </div><!-- /hq-features -->
+
+      <div class="section-divider"></div>
+
+      <!-- ── Get notifications when… ── -->
+      <h2 class="section-heading" style="margin-top:0">Get notifications when…</h2>
+      <label class="perm-item" style="margin-bottom:0">
+        <input type="checkbox" />
+        <label>Order email remains unopened after some time</label>
+      </label>
 
     </div><!-- /form-body -->
   </main>
@@ -624,6 +716,53 @@
   document.getElementById('hqModeBtn').addEventListener('click', function() {
     window.location.href = 'Procure - HQ - Outlet Groups.html';
   });
+
+  // HQ toggle
+  document.getElementById('hqToggleRow').addEventListener('click', function() {
+    var track = document.getElementById('hqToggle');
+    var features = document.getElementById('hqFeatures');
+    var isOn = track.classList.toggle('on');
+    features.classList.toggle('visible', isOn);
+  });
+
+  // HQ tag select
+  var hqBox = document.getElementById('hqBox');
+  var hqDropdown = document.getElementById('hqDropdown');
+  hqBox.addEventListener('click', function(e) {
+    if (e.target.closest('.tag-x')) return;
+    var isOpen = hqDropdown.classList.contains('open');
+    document.querySelectorAll('.tag-dropdown.open').forEach(function(d){ d.classList.remove('open'); });
+    document.querySelectorAll('.tag-select-box.open').forEach(function(b){ b.classList.remove('open'); });
+    if (!isOpen) { hqDropdown.classList.add('open'); hqBox.classList.add('open'); }
+  });
+
+  function addHqTag(optionEl) {
+    var ph = document.getElementById('hqPlaceholder');
+    if (ph) ph.style.display = 'none';
+    var text = optionEl.textContent.trim();
+    var tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.innerHTML = '<span>' + text + '</span><button class="tag-x" onclick="removeHqTag(this)">×</button>';
+    hqBox.appendChild(tag);
+    hqDropdown.classList.remove('open');
+    hqBox.classList.remove('open');
+    optionEl.remove();
+    updateHqPermGroup();
+  }
+
+  function removeHqTag(btn) {
+    btn.closest('.tag').remove();
+    if (!hqBox.querySelector('.tag')) {
+      var ph = document.getElementById('hqPlaceholder');
+      if (ph) ph.style.display = '';
+    }
+    updateHqPermGroup();
+  }
+
+  function updateHqPermGroup() {
+    var hasHQ = hqBox.querySelectorAll('.tag').length > 0;
+    document.getElementById('hqPermGroup').classList.toggle('disabled', !hasHQ);
+  }
 </script>
 </body>
 </html>
